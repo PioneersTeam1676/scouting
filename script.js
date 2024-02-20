@@ -323,3 +323,28 @@ function onlineTester() {
 }
 
 setInterval(onlineTester, 2500);
+
+
+/* logic for input number buttons */
+
+let addButtons = document.querySelectorAll(".quantity-remove");
+
+//assumes structure of
+//add button
+//input
+//remove button
+
+addButtons.forEach((button) => {
+  //when + button clicked
+  button.addEventListener("click", () => {
+      if (button.nextElementSibling.value-1 >= 0) {
+          button.nextElementSibling.value--;
+        }
+    });
+    
+    
+    //when minus button clicked
+    button.nextElementSibling.nextElementSibling.addEventListener("click", () => {
+        button.nextElementSibling.value++;
+    });
+});
