@@ -1,3 +1,5 @@
+"use strict";
+
 const pageCount = 6;
 
 const input0_UID = document.querySelector("#input0-uid");
@@ -17,6 +19,10 @@ const input2_speaker_scored_tele = document.querySelector("#input2-speaker-score
 const input2_speaker_missed_tele = document.querySelector("#input2-speaker-missed-tele"); // input number
 const input2_speaker_scored_auto = document.querySelector("#input2-speaker-scored-auto"); // input number
 const input2_speaker_missed_auto = document.querySelector("#input2-speaker-missed-auto"); // input number
+const input2_amp_scored_tele = document.querySelector("#input2-amp-scored-tele"); // input number
+const input2_amp_missed_tele = document.querySelector("#input2-amp-missed-tele"); // input number
+const input2_amp_scored_auto = document.querySelector("#input2-amp-scored-auto"); // input number
+const input2_amp_missed_auto = document.querySelector("#input2-amp-missed-auto"); // input number
 const input2_trap_scored = document.querySelector("#input2-trap-scored"); // input number
 const input2_trap_missed = document.querySelector("#input2-trap-missed"); // input number
 const input2_park_fell = document.querySelector("#input2-park-fell"); // input radio
@@ -135,16 +141,87 @@ function validateFormInput(pageIdx) {
         if (!teamValid) return { valid: false, reason: "Match team is not a number" };
 
         // make sure they aren't zero or less
-        const matchBound = parseFloat(input1_match.value) > 0;
+        const matchBound = parseFloat(input1_match.value) >= 0;
         if (!matchBound) return { valid: false, reason: "Match value is not within bounds" };
-        const teamBound = parseFloat(input1_match.value) > 0;
+        const teamBound = parseFloat(input1_match.value) >= 0;
         if (!teamBound) return { valid: false, reason: "Team value is not within bounds" };
 
-        return { valid: true };
+        // check the team color
+        const teamRed = input1_team_red.checked;
+        const teamBlue = input1_team_blue.checked;
+        if (teamRed == teamBlue) return { valid: false, reason: "Must select either red team or blue team" };
+
+        // check the robot position
+        const noshow = input1_noshow.checked;
+        const closest = input1_noshow.checked;
+        const middle = input1_noshow.checked;
+        const furthest = input1_noshow.checked;
+        const poses = [noshow, closest, middle, furthest];
+
+        const total = poses.reduce((acc, value) => value === true ? acc + 1 : acc, 0);
+
+        if (total == 0) return { valid: false, reason: "Must select a robot position" };
+        if (total != 1) return { valid: false, reason: "Something went wrong with the total position" };
+
+        return { valid: true, data: {
+            match: input1_match.value, 
+            team: input1_team.value, 
+            alliance: teamBlue ? 2 : teamRed ? 1 : 0,
+            position: noshow ? 0 : closest ? 3 : middle ? 2 : furthest ? 1 : 0,
+        } };
 
     } else if (pageIdx == 2) {
 
-        
+        // make sure scoring is all numbers
+        const spkrScoredTele = input2_speaker_scored_tele.value;
+        const spkrMissedTele = input2_speaker_missed_tele.value;
+        const spkrScoredAuto = input2_speaker_scored_auto.value;
+        const spkrMissedAuto = input2_speaker_missed_auto.value;
+        const spkrScores = [spkrScoredTele, spkrMissedTele, spkrScoredAuto, spkrMissedAuto];
+        if (spkrScores.some(score => !isNumber(score)))
+            return { valid: false, reason: "Must input numbers for speaker scoring" };
+        if (spkrScores.some(score => score < 0))
+            return { valid: false, reason: "Speaker scores must be more than or equal to zero" };
+        const ampScoredTele = input2_amp_scored_tele.value;
+        const ampMissedTele = input2_amp_missed_tele.value;
+        const ampScoredAuto = input2_amp_scored_auto.value;
+        const ampMissedAuto = input2_amp_missed_auto.value;
+        const ampScores = [ampScoredTele, ampMissedTele, ampScoredAuto, ampMissedAuto]
+        if (ampScores.some(score => !isNumber(score)))
+            return { valid: false, reason: "Must input numbers for amp scoring" };
+        if (ampScores.some(score => score < 0))
+            return { valid: false, reason: "Amp scores must be more than or equal to zero" };
+        const trapScored = input2_trap_scored.value;
+        const trapMissed = input2_trap_missed.value;
+        if (!isNumber(trapScored) || !isNumber(trapMissed))
+            return { valid: false, reason: "Trap scores must be numbers" };
+        if (trapScored < 0 || trapMissed < 0)
+            return { valid: false, reason: "Trap scores must be more than or equal to zero" };
+
+        // check parking radio
+        const parkFell = input2_park_fell.checked;
+        const parkIgnored = input2_park_ignored.checked;
+        const parkSolo = input2_park_solo.checked;
+        const parkChain = input2_park_chain.checked;
+        const parkBuddy = input2_park_buddy.checked;
+        const parks = [parkFell, parkIgnored, parkSolo, parkChain, parkBuddy];
+
+        const total = parks.reduce((acc, value) => value === true ? acc + 1 : acc, 0);
+        if (total == 0) return { valid: false, reason: "Must select a robot parking position" };
+        if (total != 1) return { valid: false, reason: "Something went wrong with the total parking position" };
+
+        return { valid: true, data: {
+            speakerScoredTeleop: spkrScoredTele,
+            speakerMissedTeleop: spkrMissedTele,
+            speakerScoredAuto: spkrScoredAuto,
+            speakerMissedAuto: spkrMissedAuto,
+            ampScoredTeleop: ampScoredTele,
+            ampMissedTeleop: ampMissedTele,
+            ampScoredAuto: ampScoredAuto,
+            ampMissedAuto: ampMissedAuto,
+            climb: parkFell ? 1 : parkIgnored ? 2 : parkSolo ? 3 : parkChain ? 4 : parkBuddy ? 5 : 0
+        } };
+
     } else if (pageIdx == 3) {
 
         return { valid: true };
@@ -185,9 +262,25 @@ function setPage(num, pageCount) {
 }
 
 function submit() {
-    
-    let payload = {};
-    
+
+    const form0 = validateFormInput(0);
+    const form1 = validateFormInput(1);
+    const form2 = validateFormInput(2);
+
+    if (!form0.valid) {
+        alert("(Permanent Validation System) " + form0.reason);
+        return;
+    } else if (!form1.valid) {
+        alert("(Permanent Validation System) " + form1.reason);
+        return;
+    } else if (!form2.valid) {
+        alert("(Permanent Validation System) " + form2.reason);
+        return;
+    }
+
+    let payload = {
+        
+    };
 
 }
 
@@ -210,13 +303,13 @@ let onlineText = document.getElementById("online-text");
 
 function onlineTester() {
     if (window.navigator.onLine) {
-      onlineBlink.style.backgroundColor = "#338d4d";
-      onlineText.style.color = "#338d4d";
-      onlineText.innerText = "Connected";
+        onlineBlink.style.backgroundColor = "#338d4d";
+        onlineText.style.color = "#338d4d";
+        onlineText.innerText = "Connected";
     } else {
-      onlineBlink.style.backgroundColor = "#f56c6c";
-      onlineText.style.color = "#f56c6c";
-      onlineText.innerText = "Offline";
+        onlineBlink.style.backgroundColor = "#f56c6c";
+        onlineText.style.color = "#f56c6c";
+        onlineText.innerText = "Offline";
     }
 }
 
