@@ -130,7 +130,10 @@ function validateFormInput(pageIdx) {
         const bound = parseFloat(input0_UID.value) > 1000;
         if (!bound) return { valid: false, reason: "Student UID is not a valid UID" };
 
-        return { valid: true };
+        return { valid: true, data: {
+            uid: input0_UID.value,
+            super_scout: input0_super_scout.checked
+        } };
 
     } else if (pageIdx == 1) {
 
@@ -164,8 +167,8 @@ function validateFormInput(pageIdx) {
         if (total != 1) return { valid: false, reason: "Something went wrong with the total position" };
 
         return { valid: true, data: {
-            match: input1_match.value, 
-            team: input1_team.value, 
+            match_num: input1_match.value, 
+            team_num: input1_team.value, 
             alliance: teamBlue ? 2 : teamRed ? 1 : 0,
             position: noshow ? 0 : closest ? 3 : middle ? 2 : furthest ? 1 : 0,
         } };
@@ -211,14 +214,16 @@ function validateFormInput(pageIdx) {
         if (total != 1) return { valid: false, reason: "Something went wrong with the total parking position" };
 
         return { valid: true, data: {
-            speakerScoredTeleop: spkrScoredTele,
-            speakerMissedTeleop: spkrMissedTele,
-            speakerScoredAuto: spkrScoredAuto,
-            speakerMissedAuto: spkrMissedAuto,
-            ampScoredTeleop: ampScoredTele,
-            ampMissedTeleop: ampMissedTele,
-            ampScoredAuto: ampScoredAuto,
-            ampMissedAuto: ampMissedAuto,
+            tele_spkr_scored: spkrScoredTele,
+            tele_spkr_missed: spkrMissedTele,
+            auto_spkr_scored: spkrScoredAuto,
+            auto_spkr_missed: spkrMissedAuto,
+            tele_amp_scored: ampScoredTele,
+            tele_amp_missed: ampMissedTele,
+            auto_amp_scored: ampScoredAuto,
+            auto_amp_missed: ampMissedAuto,
+            trap_scored: trapScored,
+            trap_missed: trapMissed,
             climb: parkFell ? 1 : parkIgnored ? 2 : parkSolo ? 3 : parkChain ? 4 : parkBuddy ? 5 : 0
         } };
 
@@ -263,24 +268,28 @@ function setPage(num, pageCount) {
 
 function submit() {
 
-    const form0 = validateFormInput(0);
-    const form1 = validateFormInput(1);
-    const form2 = validateFormInput(2);
-
-    if (!form0.valid) {
-        alert("(Permanent Validation System) " + form0.reason);
-        return;
-    } else if (!form1.valid) {
-        alert("(Permanent Validation System) " + form1.reason);
-        return;
-    } else if (!form2.valid) {
-        alert("(Permanent Validation System) " + form2.reason);
-        return;
+    if (input0_super_scout.checked) {
+        alert("I didn't do superscouting yet oopsie...");
+    } else {
+        const form0 = validateFormInput(0);
+        const form1 = validateFormInput(1);
+        const form2 = validateFormInput(2);
+    
+        if (!form0.valid) {
+            alert("(Permanent Validation System) " + form0.reason);
+            return;
+        } else if (!form1.valid) {
+            alert("(Permanent Validation System) " + form1.reason);
+            return;
+        } else if (!form2.valid) {
+            alert("(Permanent Validation System) " + form2.reason);
+            return;
+        }
+    
+        let payload = { ...form0.data, ...form1.data, ...form2.data };
+        console.log(`PAYLOAD: ${payload}`);
     }
-
-    let payload = {
-        
-    };
+    
 
 }
 
