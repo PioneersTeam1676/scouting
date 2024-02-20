@@ -1,0 +1,1062 @@
+ <!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        
+    <title>Scouting '24</title>
+    <meta name="description" content="FRC Team 1676 - Scouting System 2024" />
+        
+    <link rel="manifest" href="manifest.json" /> 
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Scouting 24'">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="theme-color" content="#000">
+    
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/12.9__iPad_Pro_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/11__iPad_Pro__10.5__iPad_Pro_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/10.9__iPad_Air_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/10.5__iPad_Air_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/10.2__iPad_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/9.7__iPad_Pro__7.9__iPad_mini__9.7__iPad_Air__9.7__iPad_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="./assets/img/pwa/iPhone_14_Pro_Max__iPhone_14_Max__iPhone_13_Pro_Max__iPhone_12_Pro_Max_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="./assets/img/pwa/iPhone_14_Pro__iPhone_14__iPhone_13_Pro__iPhone_13__iPhone_12_Pro__iPhone_12_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="./assets/img/pwa/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="./assets/img/pwa/iPhone_11_Pro_Max__iPhone_XS_Max_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/iPhone_11__iPhone_XR_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" href="./assets/img/pwa/iPhone_8_Plus__iPhone_7_Plus__iPhone_6s_Plus__iPhone_6_Plus_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/iPhone_8__iPhone_7__iPhone_6s__iPhone_6__4.7__iPhone_SE_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)" href="./assets/img/pwa/4__iPhone_SE__iPod_touch_5th_generation_and_later_landscape.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/12.9__iPad_Pro_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/11__iPad_Pro__10.5__iPad_Pro_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/10.9__iPad_Air_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/10.5__iPad_Air_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/10.2__iPad_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/9.7__iPad_Pro__7.9__iPad_mini__9.7__iPad_Air__9.7__iPad_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./assets/img/pwa/iPhone_14_Pro_Max__iPhone_14_Max__iPhone_13_Pro_Max__iPhone_12_Pro_Max_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./assets/img/pwa/iPhone_14_Pro__iPhone_14__iPhone_13_Pro__iPhone_13__iPhone_12_Pro__iPhone_12_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./assets/img/pwa/iPhone_13_mini__iPhone_12_mini__iPhone_11_Pro__iPhone_XS__iPhone_X_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./assets/img/pwa/iPhone_11_Pro_Max__iPhone_XS_Max_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/iPhone_11__iPhone_XR_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="./assets/img/pwa/iPhone_8_Plus__iPhone_7_Plus__iPhone_6s_Plus__iPhone_6_Plus_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/iPhone_8__iPhone_7__iPhone_6s__iPhone_6__4.7__iPhone_SE_portrait.png">
+    <link rel="apple-touch-startup-image" media="screen and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="./assets/img/pwa/4__iPhone_SE__iPod_touch_5th_generation_and_later_portrait.png">
+
+    <link rel="apple-touch-icon" href="./assets/img/pwa/icon.png">
+	<link rel="icon" sizes="192x192" href="./assets/img/pwa/piwebappB.png">
+	<link rel="icon" sizes="310x310" href="./assets/img/pwa/piwebappC.png">
+
+    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+        
+    <!--<script type="module" src="./assets/js/ionic/ionic.esm.js"></script>-->
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="./assets/js/ionic.js"></script>
+    <link rel="stylesheet" href="./assets/css/ionic.bundle.css" />
+    
+    <script src="./assets/js/jquery.min.js"></script>
+    <script defer src="./assets/js/qrcode.min.js"></script>
+    
+    <script>
+        /* LOAD SERVICE WORKER */
+    
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('./service-worker.js')
+            .then(function(registration) {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+              navigator.serviceWorker.ready.then(function(registration) {
+                registration.active.postMessage({ action: 'getVersion' });
+              });
+            }).catch(function(err) {
+              document.getElementById('sw-version').innerText = 'Service worker registration failed: ' + err;
+            });
+          navigator.serviceWorker.addEventListener('message', function(event) {
+            if (event.data.action === 'version') {
+              document.getElementById('sw-version').innerText = `Service Worker ${event.data.version}`;
+            }
+          });
+        } else {
+          document.getElementById('sw-version').innerText = 'Service workers not supported.';
+        }
+    </script>
+
+    <meta http-equiv="expires" content="Sun, 31 Dec 2018 1:00:00 GMT" />
+    <script defer>window.scrollTo(0, 0);</script>
+    <!--<script>window.onbeforeunload = () => { return "Are you sure you want to leave? Your progress might not be saved!"; };</script>-->
+    
+    <script defer src="./field.js"></script>
+    <script defer src="./script.js"></script>
+    
+    <script defer src="./storage/session.js"></script>
+    <script defer src="./storage/users.js"></script>
+
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./field.css">
+    <link rel="stylesheet" href="./variables.css">
+</head>
+
+<body class="dark">
+
+    <div style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background: var(--bg) #000;"></div>
+    <div id="loader" style="position: fixed; top: 0; bottom: 0; left: 0; right: 0; background: #000; z-index: 1;">
+        <img style="display: block; margin: auto; width: 70px; margin-top: 20vh;" src="./assets/img/loader.gif">
+        <h6 style="text-align: center; margin-top: 25px; font-family: monospace;">Loading...</h6>
+    </div>
+    
+    <ion-app>
+        
+    <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel2" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel2">Damaged Robot</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h1>Are you sure the robot is <b>damaged?</b></h1>
+                    <button type="button" class="btn btn-primary btn-large" data-bs-dismiss="modal">No,
+                        nevermind</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Yes, it is damaged</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <ion-modal class="login-modal" mode="md">
+        <ion-content class="ion-padding">
+              
+            <div class="page page-visible page-0">
+                <img src="./assets/img/sunburst-pi.png" width="50px" class="mt-2" style="display: block; margin: auto;">
+                <h1 class="mt-2">Scouting Input Login</h1>
+                <hr>
+                
+                <p class="warning mb-3" style="line-height: 1.5; font-size: 17px;">
+                    Please enter your four-digit member identifier. <a href="./assets/img/profiles/UIDs.pdf" target="_blank" style="font-size: 17px;">Lookup table ›</a>
+                </p>
+                
+                <div class="input-group" style="margin: auto; max-width: fit-content; font-family: monospace;">
+                    <span class="input-group-text" style="font-family: monospace; font-size: 40px;" id="basic-addon1">uid-</span>
+                    <input id="input0-uid" type="text" inputmode="numeric" pattern="\d*" class="form-control" placeholder="####"
+                        aria-label="Username" aria-describedby="basic-addon1" style="font-size: 40px; max-width: 160px;" autofocus="false">
+                </div>
+    
+                <div class="continue-container mt-3">
+                    <ion-button id="launch-check-user" expand="block">
+                        Continue ›
+                    </ion-button>
+                </div>
+                
+                <hr>
+                <div style="width: 100%; display: flex; justify-content: center;" class="form-check form-switch mb-2">
+                    <input class="form-check-input" type="checkbox" role="switch" id="superscout-switch" disabled>
+                    <label class="form-check-label ps-2" for="superscout-switch" style="font-size: 16px; padding-top: 0.15rem;">&nbsp;Enable Super-Scout Mode</label>
+                </div>
+            </div>
+        </ion-content>
+    </ion-modal>
+    
+    <ion-modal class="check-user" trigger="launch-check-user" initialBreakpoint="5">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Is this you?</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="modal-body">
+            <img style="width: 120px; margin: 30px auto 15px; display: block; border-radius: 15px; box-shadow: 0 0 8px 0 #00000088;" id="modal-profile" src="./assets/img/thomas.jpeg">
+            <span style="font-weight: bold;" id="modal-name">John Doe</span>
+            <span style="font-style: italic;" id="modal-email">user@example.com</span>
+            <!--<p style="font-size: 16px;">
+                Oh, you recognize that fella?
+                Are you proud of yourself?
+                Oh yeah. I know EVERYTHING about you.
+                Your loves. Your hates. Your fears. Your regrets.
+                If I were you, I'd be quaking in my boots.
+                Sleep with one eye open.<br>
+                Recognize (TODO: Get address)? On my way.
+            </p>-->
+        </div>
+        <div class="modal-footer mt-4" style="justify-content: center;">
+            <button type="button" class="btn btn-lg btn-danger" onclick="document.querySelector('ion-modal.check-user').dismiss();">No, not me.</button>&nbsp;&nbsp;
+            <button id="input0-login" type="button" class="btn btn-lg btn-success page-btn-1">Yes, this is me!</button>
+        </div>
+      </ion-content>
+    </ion-modal>
+    
+    <ion-tabs>
+      <ion-tab tab="scout">
+        <ion-nav id="scout-nav"></ion-nav>
+        <div id="scout-page">
+            
+        <ion-header>
+          <ion-toolbar>
+              
+        <div style="margin: 16px; margin-bottom: 0;">
+        <div style="display: flex; height: 85px; font-size: 18px;" class="page-invisible view">
+            <div class="view-part view-left" id="view-info-container">
+                <div style="height: 24px; margin-top: -4px;">
+                    <span class="view-infotitle">Match #</span><span class="view-value" id="view-matchnum"></span>
+                </div>
+                <div style="height: 24px;">
+                    <span class="view-infotitle">Robot #</span><span class="view-value" id="view-robotnum"></span>
+                </div>
+                <div style="height: 24px;">
+                    <span class="view-value" id="view-alliance"></span> - 
+                    <span class="view-infotitle">Close</span>
+                </div>
+            </div>
+            <div class="view-part view-right" id="view-user-container">
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; line-height: 1.25;">
+                    <div>
+                        <img id="view-profile" src="./assets/img/thomas.jpeg" style="width: 60px; border-radius: 50%; margin-top: 4px;">&nbsp;&nbsp;
+                        <br>
+                        <small style="display: none; text-align: center; margin-top: 10px; color: #ffed7d; background: #322b16; padding-top: 2px; top: -40px; position: relative; border-radius: 6px; font-weight: 700; width: calc(100% - 4px);" id="super-tag">
+                            <ion-icon name="star"></ion-icon>
+                            <span style="position: relative; top: -1px;">SUPER</span>
+                        </small>
+                    </div>
+                    <div style="display: inline-block; width: calc(100% - 60px); text-align: right;">
+                        <span class="view-value" id="view-name"></span>
+                        <br>
+                        <span class="view-infotitle" style="font-family: monospace;">uid-</span><span class="view-value" style="font-family: monospace;" id="view-uid"></span>
+                        <br>
+                        <span class="view-infotitle" style="margin-left: 15px;">
+                            <div id="online-indicator" class="online-indicator">
+                                <span id="online-blink" class="blink"></span>
+                            </div>
+                            <h5 id="online-text" class="online-text">Connected</h5>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+              
+          </ion-toolbar>
+        </ion-header>
+            
+          <ion-content>
+
+    <div class="main-content">
+
+        <div class="page page-invisible page-1">
+            <h1>Pre-match Info</h1>
+            <hr>
+
+            <div class="input-group input-group-sm mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Match #</span>
+                <input id="input1-match" inputmode="numeric" pattern="\d*" class="form-control" aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <div class="input-group input-group-sm mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-sm">Team #</span>
+                <input id="input1-team" inputmode="numeric" pattern="\d*" class="form-control" aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-sm">
+            </div>
+
+            <label class="form-label" for="position-radio">
+                Alliance <span style="font-size: 10px">(Select One)</span>
+            </label>
+
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                <input id="input1-team-red" type="radio" class="btn-check" name="bot-team" autocomplete="off">
+                <label class="btn btn-outline-danger" for="input1-team-red">Red</label>
+
+                <input id="input1-team-blue" type="radio" class="btn-check" name="bot-team" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input1-team-blue">Blue</label>
+            </div>
+
+            <label class="form-label" for="position-radio">
+                Bot Position <span style="font-size: 10px">(Select One)</span>
+            </label>
+
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                <input id="input1-bot-noshow" type="radio" class="btn-check" name="bot-loc" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="input1-bot-noshow">No-Show</label>
+
+                <input id="input1-bot-closest" type="radio" class="btn-check" name="bot-loc" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="input1-bot-closest">Close</label>
+
+                <input id="input1-bot-middle" type="radio" class="btn-check" name="bot-loc" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="input1-bot-middle">Middle</label>
+
+                <input id="input1-bot-furthest" type="radio" class="btn-check" name="bot-loc" autocomplete="off">
+                <label class="btn btn-outline-secondary" for="input1-bot-furthest">Far</label>
+            </div>
+
+            <hr>
+            <div class="continue-container">
+                <button id="input1-start" class="mt-1 btn btn-primary btn-large page-btn-2">Start Match</button>
+                <p class="warning">
+                    Make sure that all the information above is correct before continuing!
+                </p>
+            </div>
+
+        </div>
+
+        <div class="page page-invisible page-2">
+            <div style="display: flex; width: 100%; justify-content: center;">
+                <button data-bs-toggle="modal" data-bs-target="#staticBackdrop2"
+                    class="btn btn-spaced btn-danger btn-large page-btn-1">Robot Damaged</button>
+            </div>
+        </div>
+
+        <div class="page page-invisible page-2">
+
+            <h1>Autonomous Stage</h1>
+            <hr>
+            <div class="input-row">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="input2-robot-left-start">
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Robot Left Start Zone?</label>
+                </div>
+            </div>
+
+            <div class="scoring-container">
+                <label class="form-label" for="position-radio">
+                    Subwoofer / Speaker Scoring
+                </label>
+
+                <div class="scoremiss-group-container">
+                    <img src="./assets/img/examples/speaker.png" class="example"></img>
+                    <div class="scoremiss-input-container">
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Scored</span>
+                            <input id="input2-speaker-scored-auto" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="scored no amp">
+                        </div>
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Missed</span>
+                            <input id="input2-speaker-missed-auto" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="missed no amp">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="scoring-container">
+                <label class="form-label" for="position-radio">
+                    Amp Scoring
+                </label>
+
+                <div class="scoremiss-group-container">
+                    <img src="./assets/img/examples/amp.png" class="example"></img>
+                    <div class="scoremiss-input-container">
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Scored</span>
+                            <input id="input2-amp-scored-auto" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="scored no amp">
+                        </div>
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Missed</span>
+                            <input id="input2-amp-missed-auto" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="missed no amp">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page page-invisible page-2">
+
+            <h1>Teleop Stage</h1>
+            <hr>
+
+            <div class="scoring-container">
+                <label class="form-label" for="position-radio">
+                    Subwoofer / Speaker Scoring
+                </label>
+
+                <div class="scoremiss-group-container">
+                    <img src="./assets/img/examples/speaker.png" class="example">
+                    <div class="scoremiss-input-container">
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Scored</span>
+                            <input id="input2-speaker-scored-tele" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="scored no amp">
+                        </div>
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Missed</span>
+                            <input id="input2-speaker-missed-tele" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="missed no amp">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="scoring-container">
+                <label class="form-label" for="position-radio">
+                    Amp Scoring
+                </label>
+
+                <div class="scoremiss-group-container">
+                    <img src="./assets/img/examples/amp.png" class="example"></img>
+                    <div class="scoremiss-input-container">
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Scored</span>
+                            <input id="input2-amp-scored-tele" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="scored no amp">
+                        </div>
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Missed</span>
+                            <input id="input2-amp-missed-tele" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="missed no amp">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page page-invisible page-2">
+
+            <h1>Endgame</h1>
+            <hr>
+
+            <div class="scoring-container">
+                <label class="form-label" for="position-radio">
+                    Trap Scoring
+                </label>
+
+                <div class="scoremiss-group-container">
+                    <img src="./assets/img/examples/trap.png" class="example"></img>
+                    <div class="scoremiss-input-container">
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Scored</span>
+                            <input id="input2-trap-scored" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="scored">
+                        </div>
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Missed</span>
+                            <input id="input2-trap-missed" inputmode="numeric" pattern="\d*" class="form-control" placeholder="0"
+                                aria-label="missed">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <label class="form-label" for="position-radio">
+                Robot Parking <span style="font-size: 10px">(Select One)</span>
+            </label>
+
+            <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                <input id="input2-park-fell" type="radio" class="btn-check" name="parking" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-park-fell">Fell Off Chain</label>
+                <input id="input2-park-ignored" type="radio" class="btn-check" name="parking" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-park-ignored">Did Not Park</label>
+                <input id="input2-park-solo" type="radio" class="btn-check" name="parking" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-park-solo">Parked Bot</label>
+                <input id="input2-park-chain" type="radio" class="btn-check" name="parking" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-park-chain">Bot Climbed Chain</label>
+                <input id="input2-park-chain-buddy" type="radio" class="btn-check" name="parking" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-park-chain-buddy">2+ Bots Climbed Chain</label>
+            </div>
+
+        </div>
+
+        <div class="page page-invisible page-2">
+            <label class="form-label" for="position-radio">
+                Note on peg above Robot? <span style="font-size: 10px">(Select One)</span>
+            </label>
+
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                <input id="input2-peg-score" type="radio" class="btn-check" name="frisbee-peg" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-peg-score">Yes</label>
+
+                <input id="input2-peg-miss" type="radio" class="btn-check" name="frisbee-peg" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-peg-miss">No</label>
+            </div>
+
+            <label class="form-label" for="position-radio">
+                Both teams score Coopertition Points? <span style="font-size: 10px">(Select One)</span>
+            </label>
+
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                <input id="input2-cooper-yes" type="radio" class="btn-check" name="cooper" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-cooper-yes">Yes</label>
+
+                <input id="input2-cooper-no" type="radio" class="btn-check" name="cooper" autocomplete="off">
+                <label class="btn btn-outline-primary" for="input2-cooper-no">No</label>
+            </div>
+            <hr>
+            <div class="prim-btn-container">
+                <button onclick="setPage(1, 3)"
+                    class="mt-1 btn btn-spaced btn-danger btn-large page-btn-1">Cancel</button>
+                <button class="mt-1 btn btn-spaced btn-success btn-large page-btn-3">Game Complete</button>
+            </div>
+        </div>
+
+        <div class="page page-invisible page-3">
+            <h1>Auto Path</h1>
+            
+            <div id="fieldContainer">
+                <canvas id="imageCanvas" class="flip" width="1266" height="591"></canvas>
+            </div>
+            
+            <div class="mb-3" id="fieldBtnContainer">
+                <input type="radio" class="btn-check" name="fieldOptions" id="startFieldBlue" onclick="unflipField()">
+                <label class="btn btn-secondary" for="startFieldBlue">Front View</label>
+                <input type="radio" class="btn-check" name="fieldOptions" id="startFieldRed" onclick="flipField()">
+                <label class="btn btn-secondary" for="startFieldRed">Reverse View</label>
+                <span id="viewWillChange">➝ View will change when page is refreshed.</span>
+            </div>
+
+            <div class="continue-container">
+                <button id="input3-next" class="mt-1 btn btn-primary btn-large page-btn-4">Continue</button>
+                <p class="warning">
+                    Make sure that all the information above is correct before continuing!
+                </p>
+            </div>
+        </div>
+
+        <div class="page page-invisible page-4">
+
+            <h1>Teleop</h1>
+
+            <div class="scoring-container">
+                <label class="form-label" for="position-radio">
+                    Amplified Scoring
+                </label>
+
+                <div class="scoremiss-group-container">
+                    <img src="./assets/img/examples/speaker.png" class="example"></img>
+                    <div class="scoremiss-input-container">
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Scored</span>
+                            <input type="number" class="form-control" placeholder="0" aria-label="scored amp">
+                        </div>
+                        <div class="input-group m-1">
+                            <span class="input-group-text">Missed</span>
+                            <input type="number" class="form-control" placeholder="0" aria-label="missed amp">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <label class="form-label">
+                Offensive Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+            </label>
+
+            <div class="range">
+                <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
+                id="range-offense-rating-1">
+                <label class="btn btn-outline-primary" for="range-offense-rating-1">1</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
+                id="range-offense-rating-2">
+                <label class="btn btn-outline-primary" for="range-offense-rating-2">2</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
+                id="range-offense-rating-3">
+                <label class="btn btn-outline-primary" for="range-offense-rating-3">3</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
+                id="range-offense-rating-4">
+                <label class="btn btn-outline-primary" for="range-offense-rating-4">4</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
+                id="range-offense-rating-5">
+                <label class="btn btn-outline-primary" for="range-offense-rating-5">5</label>
+            </div>
+
+            <label class="form-label">
+                Defensive Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+            </label>
+
+            <div class="range">
+                <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
+                id="range-defense-rating-1">
+                <label class="btn btn-outline-primary" for="range-defense-rating-1">1</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
+                id="range-defense-rating-2">
+                <label class="btn btn-outline-primary" for="range-defense-rating-2">2</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
+                id="range-defense-rating-3">
+                <label class="btn btn-outline-primary" for="range-defense-rating-3">3</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
+                id="range-defense-rating-4">
+                <label class="btn btn-outline-primary" for="range-defense-rating-4">4</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
+                id="range-defense-rating-5">
+                <label class="btn btn-outline-primary" for="range-defense-rating-5">5</label>
+            </div>
+
+            <label class="form-label" for="position-radio">
+                Notes on Offensive / Defensive
+            </label>
+
+            <textarea placeholder="Type here"></textarea>
+
+            <label class="form-label" for="position-radio">
+                Scoring focus <span style="font-size: 10px">(Select One)</span>
+            </label>
+
+            <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                <input id="input4-score-nopref" type="radio" class="btn-check" name="score-pref" autocomplete="off"
+                    checked>
+                <label class="btn btn-outline-primary" for="input4-score-nopref">No Pref</label>
+
+                <input id="input4-score-amp" type="radio" class="btn-check" name="score-pref" autocomplete="off"
+                    checked>
+                <label class="btn btn-outline-primary" for="input4-score-amp">Amp</label>
+
+                <input id="input4-score-speaker" type="radio" class="btn-check" name="score-pref" autocomplete="off"
+                    checked>
+                <label class="btn btn-outline-primary" for="input4-score-speaker">Speaker</label>
+            </div>
+
+            </div><div class="page page-invisible page-4">
+
+            <h1>Teleop Strategy</h1>
+
+            <label class="form-label" for="position-radio">
+                Player / Drive Team Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+            </label>
+            
+            <div class="range">
+                <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating" id="range-player-rating-1">
+                <label class="btn btn-outline-primary" for="range-player-rating-1">1</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating" id="range-player-rating-2">
+                <label class="btn btn-outline-primary" for="range-player-rating-2">2</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating" id="range-player-rating-3">
+                <label class="btn btn-outline-primary" for="range-player-rating-3">3</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating" id="range-player-rating-4">
+                <label class="btn btn-outline-primary" for="range-player-rating-4">4</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating" id="range-player-rating-5">
+                <label class="btn btn-outline-primary" for="range-player-rating-5">5</label>
+            </div>
+
+            <label class="form-label">
+                Amp Strat Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+            </label>
+
+            <div class="range">
+                <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
+                id="range-ampstrat-rating-1">
+                <label class="btn btn-outline-primary" for="range-ampstrat-rating-1">1</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
+                id="range-ampstrat-rating-2">
+                <label class="btn btn-outline-primary" for="range-ampstrat-rating-2">2</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
+                id="range-ampstrat-rating-3">
+                <label class="btn btn-outline-primary" for="range-ampstrat-rating-3">3</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
+                id="range-ampstrat-rating-4">
+                <label class="btn btn-outline-primary" for="range-ampstrat-rating-4">4</label>
+                <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
+                id="range-ampstrat-rating-5">
+                <label class="btn btn-outline-primary" for="range-ampstrat-rating-5">5</label>
+            </div>
+
+            <label class="form-label" for="position-radio">
+                Notes on amp strategy
+            </label>
+
+            <textarea placeholder="Type here"></textarea>
+
+            <div class="continue-container">
+                <button id="input4-next" class="mt-1 btn btn-primary btn-large page-btn-5">Continue</button>
+                <p class="warning">
+                    Make sure that all the information above is correct before continuing!
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    </ion-content>
+    </div>
+  </ion-tab>
+  <ion-tab tab="data">
+    <ion-nav id="data-nav"></ion-nav>
+    <div id="data-page">
+
+    <ion-header>
+      <ion-toolbar id="data-query" style="padding-top: 10px; margin-bottom: -10px;">
+        <ion-title>Data Query</ion-title>
+      </ion-toolbar>
+      <ion-toolbar>
+        <ion-segment id="search-mode" value="team">
+          <ion-segment-button value="team">
+            <ion-label>Team Number</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="match">
+            <ion-label>Match Number</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+        <ion-searchbar id="search-bar" placeholder="Search by Team Number" inputmode="numeric"></ion-searchbar>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-list id="item-list">
+        <!-- Finite scroll content will be added here -->
+      </ion-list>
+      <p id="no-results" style="display: none; color: red;">No results found.</p>
+    </ion-content>
+    <!-- Container for dynamically inserted pages -->
+    <ion-content id="page-container" style="--background: #313131; text-align: center;">
+      <small style="margin-top: 60px; font-size: 12pt;">^ select a match above to see details</small>
+    </ion-content>
+    
+  <script>
+    // Function to generate items and buttons
+    function generateItemsAndButtons(startIndex, count) {
+      const itemList = document.getElementById('item-list');
+      for (let i = startIndex; i <= count; i++) {
+        const item = document.createElement('ion-item');
+        const button = document.createElement('ion-button');
+        button.textContent = `Match ${i}`; // Button text "Match i"
+        button.id = `button-${i}`; // Assign ID to the button
+        button.onclick = () => navigateToPage(i);
+        // Generate 6 random numbers
+        const numbers = Array.from({
+          length: 6
+        }, () => Math.floor(Math.random() * 1000));
+        // Store the numbers as a data attribute on the button
+        button.dataset.numbers = numbers.join(',');
+        button.classList.add("open-match-btn");
+        // Display the numbers as text next to the button
+        const numbersText = document.createElement('span');
+        numbersText.textContent = numbers.join(', ');
+        numbersText.style.marginLeft = '10px'; // Add some spacing
+        numbersText.style.fontSize = "16px";
+        item.appendChild(button);
+        item.appendChild(numbersText);
+        itemList.appendChild(item);
+      }
+    }
+    // Generate initial items and buttons
+    generateItemsAndButtons(1, 250); // Generate items from 1 to 250
+    // Function to navigate to a specific page
+    function navigateToPage(pageIndex) {
+      // Create a new page element
+      const newPage = document.createElement('ion-page');
+      newPage.innerHTML = `
+        <ion-content fullscreen class="ion-padding">
+          <h1>Page ${pageIndex}</h1>
+          <ion-button onclick="closePage(${pageIndex})" expand="block">Close Page</ion-button>
+        </ion-content>
+      `;
+      // Append the new page to the page container
+      const pageContainer = document.getElementById('page-container');
+      pageContainer.innerHTML = '';
+      pageContainer.appendChild(newPage);
+    }
+    // Function to close the newly opened page and return to the original page
+    function closePage(pageIndex) {
+      // Clear existing pages
+      const pageContainer = document.getElementById('page-container');
+      pageContainer.innerHTML = '';
+      // Re-generate initial items and buttons
+      generateItemsAndButtons(1, 250);
+    }
+    // Function to disable button based on ID
+    function disableButton(buttonId) {
+      const button = document.getElementById(buttonId);
+      if (button) {
+        button.disabled = true;
+      }
+    }
+    // Function to disable multiple buttons based on IDs array
+    function disableButtons(buttonIds) {
+      buttonIds.forEach(disableButton);
+    }
+    // Disable buttons with IDs "button-5" and "button-10"
+    disableButtons(["button-5", "button-10"]);
+    // Function to filter buttons based on entered numbers
+    function filterButtonsByNumbers(numbers, mode) {
+      const buttons = document.querySelectorAll('ion-button.open-match-btn');
+      let foundResults = false;
+      if (numbers === '') {
+        // If the search bar is empty, display all buttons
+        for (const button of buttons) {
+          button.closest('ion-item').style.display = 'block';
+        }
+        // Hide the "No results found" message
+        const noResultsMessage = document.getElementById('no-results');
+        noResultsMessage.style.display = 'none';
+        return;
+      }
+      // Regular expression to match only numbers, spaces, and commas
+      const validCharactersRegex = /^[0-9, ]*$/;
+      // Check if the entered numbers are valid
+      if (!validCharactersRegex.test(numbers)) {
+        console.log('Invalid characters detected.');
+        return;
+      }
+      // Convert all commas to spaces and split the numbers by spaces
+      const searchNumbers = numbers.replace(/,/g, ' ').split(' ').filter(num => num !== '').map(num => parseInt(num));
+      for (const button of buttons) {
+        const buttonNumbers = button.dataset.numbers.split(',').map(num => parseInt(num));
+        // Check if all search numbers are present in the button numbers
+        const hasAllNumbers = searchNumbers.every(num => buttonNumbers.includes(num));
+        if (hasAllNumbers) {
+          button.closest('ion-item').style.display = 'block';
+          foundResults = true;
+        } else {
+          button.closest('ion-item').style.display = 'none';
+        }
+      }
+      // Display or hide the "No results found" message based on search results
+      const noResultsMessage = document.getElementById('no-results');
+      noResultsMessage.style.display = foundResults ? 'none' : 'block';
+    }
+    // Listen for changes in the search mode
+    const searchMode = document.getElementById('search-mode');
+    searchMode.addEventListener('ionChange', (event) => {
+      const mode = event.detail.value;
+      const searchBar = document.getElementById('search-bar');
+      if (mode === 'team') {
+        searchBar.placeholder = 'Search by Team Number';
+      } else if (mode === 'match') {
+        searchBar.placeholder = 'Search by Match Number';
+      }
+      const numbersToLookup = searchBar.value.trim();
+      filterButtonsByNumbers(numbersToLookup, mode);
+    });
+    // Listen for changes in the search bar
+    const searchBar = document.getElementById('search-bar');
+    searchBar.addEventListener('input', (event) => {
+      // Filter out any non-numeric characters
+      event.target.value = event.target.value.replace(/[^\d, ]/g, '');
+      const numbersToLookup = event.target.value.trim();
+      const mode = searchMode.value;
+      filterButtonsByNumbers(numbersToLookup, mode);
+    });
+  </script>
+  <style>
+    /* Style for disabled buttons */
+    ion-button[disabled] {
+      background-color: #F4F4F4;
+      /* Change background color */
+      color: #888;
+      /* Change text color */
+      cursor: not-allowed;
+      /* Change cursor to not-allowed */
+    }
+  </style>
+          
+  
+          
+        <!--<iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTQV-MUv9LaNKRewFRqv91sY5h3a0PfE2CnJfqBNckNOEPKj7OVnieStsp41EZ6JtYAmwzrRXsxFuok/pubhtml?widget=true&amp;headers=false" width="100%" height="100%"></iframe>-->
+      </ion-content>
+    </div>
+  </ion-tab>
+  <ion-tab tab="history">
+    <ion-nav id="history-nav"></ion-nav>
+    <div id="history-page">
+        
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Device History</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        
+      <ion-content class="ion-content-black">
+
+        <ion-list>
+            <ion-item button="true">
+                <ion-text color="primary" slot="start">
+                    <ion-icon name="qr-code-outline"></ion-icon>
+                    Transfer from Computer
+                </ion-text>
+            </ion-item>
+        </ion-list>
+
+        <ion-list>
+            <ion-item>
+            
+              <ion-row>
+                <ion-col size="4">
+                  <ion-label>Match #:</ion-label>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-label>Team #:</ion-label>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-label style="color:green;"> Synced</ion-label>
+                </ion-col>
+                <ion-col size="2">
+                    <ion-icon name="sync-outline"></ion-icon>
+                </ion-col>
+              </ion-row>
+            
+            </ion-item>
+             <ion-item>
+            
+              <ion-row>
+                <ion-col size="4">
+                  <ion-label>Match #:</ion-label>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-label>Team #:</ion-label>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-label style="color:green;"> Synced</ion-label>
+                </ion-col>
+                <ion-col size="2">
+                    <ion-icon name="sync-outline"></ion-icon>
+                </ion-col>
+              </ion-row>
+              
+            </ion-item>
+            <ion-item>
+            
+              <ion-row>
+                <ion-col size="4">
+                  <ion-label>Match #:</ion-label>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-label>Team #:</ion-label>
+                </ion-col>
+                <ion-col size="4">
+                  <ion-label style="color:green;"> Synced</ion-label>
+                </ion-col>
+                <ion-col size="2">
+                    <ion-icon name="sync-outline"></ion-icon>
+                </ion-col>
+              </ion-row>
+            
+            </ion-item>
+            
+        </ion-list>
+      </ion-content>
+      
+    </div>
+  </ion-tab>
+  <ion-tab tab="settings">
+    <ion-nav id="settings-nav"></ion-nav>
+    <div id="settings-page">
+        
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Settings</ion-title>
+          </ion-toolbar>
+        </ion-header>
+        
+        <ion-content class="ion-content-black">
+            
+          <ion-list inset="true" class="mt-4" style="padding-top: 15px;">
+            <ion-item>
+              <div slot="start">
+                <ion-avatar style="display: none; width: 45px; height: 45px; margin-right: 4px; ">
+                  <ion-img id="settings-profile" src="https://i.pravatar.cc/300?u=b" />
+                </ion-avatar>
+                <ion-label style="display: inline;">
+                  <span style="display: inline-block;">
+                    <h2 id="settings-name">John Doe</h2>
+                    <p id="settings-email">user@example.com</p>
+                  </span>
+                </ion-label>
+              </div>
+              <ion-label>
+                <span style="display: inline-block; float: right; padding-top: 10px;">
+                  <h3 style="font-family: monospace;">uid-<span id="settings-uid">0000</span></h3>
+                </span>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        
+          <ion-list inset="true">
+            <ion-item>
+              <ion-toggle id="toggle" justify="space-between">Bold Text</ion-toggle>
+            </ion-item>
+          </ion-list>
+        
+          <ion-list inset="true">
+            <ion-item>
+              <ion-range id="text-select" ticks="true" snaps="true" min="0" max="5">
+                <ion-icon name="text-outline" slot="start" style="transform: scale(0.81);"></ion-icon>
+                <ion-icon name="text-outline" slot="end" style="transform: scale(0.97);"></ion-icon>
+              </ion-range>
+            </ion-item>
+          </ion-list>
+          
+          <ion-list inset="true">
+            <ion-item button="true" onclick="logout();">
+              <ion-text color="primary" slot="start">Logout</ion-text>
+            </ion-item>
+            <ion-item button="true" id="open-modal">
+              <ion-text color="danger" slot="start">
+                Danger zone
+              </ion-text>
+            </ion-item>
+          </ion-list>
+          
+          <ion-modal class="danger-zone" trigger="open-modal">
+              <ion-list inset="true">
+                <ion-item>
+                  <ion-text slot="start"><span id="sw-version">Loading Service Worker...</span></ion-text>
+                </ion-item>
+                <ion-item button="true">
+                  <ion-text color="primary" slot="start">Update Service Worker</ion-text>
+                </ion-item>
+                <ion-item button="true">
+                  <ion-text color="primary" slot="start" onclick="reset();">Reset Session</ion-text>
+                </ion-item>
+              </ion-list>
+          </ion-modal>
+          
+          <script>
+            var modal = document.querySelector('ion-modal.danger-zone');
+            modal.initialBreakpoint = 1;
+            modal.breakpoints = [0, 1];
+          </script>
+          
+          <style>
+            .block {
+              width: 100%;
+              height: 300px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            ion-modal.danger-zone {
+              --height: auto;
+            }
+          </style>
+        </ion-content>
+    </div>
+  </ion-tab>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="data">
+      <ion-icon name="bar-chart"></ion-icon>
+      Data
+    </ion-tab-button>
+    <ion-tab-button tab="scout">
+      <ion-icon name="game-controller"></ion-icon>
+      Scout
+    </ion-tab-button>
+    <ion-tab-button tab="history">
+      <ion-icon name="time"></ion-icon>
+      History
+    </ion-tab-button>
+    <ion-tab-button tab="settings">
+      <ion-icon name="cog"></ion-icon>
+      Settings
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
+
+<script>
+  const scoutNav = document.querySelector('#scout-nav');
+  const scoutPage = document.querySelector('#scout-page');
+  scoutNav.root = scoutPage;
+
+  const dataNav = document.querySelector('#data-nav');
+  const dataPage = document.querySelector('#data-page');
+  dataNav.root = dataPage;
+
+  const historyNav = document.querySelector('#history-nav');
+  const historyPage = document.querySelector('#history-page');
+  historyNav.root = historyPage;
+
+  const settingsNav = document.querySelector('#settings-nav');
+  const settingsPage = document.querySelector('#settings-page');
+  settingsNav.root = settingsPage;
+</script>
+
+</ion-app>
+
+</body>
+
+</html>

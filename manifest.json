@@ -1,0 +1,27 @@
+{
+  "short_name": "Scouting '24",
+  "name": "Scouting 2024",
+  "description": "FRC Team 1676 | The Pascack Pi-oneers",
+  "icons": [
+    {
+      "src": "./assets/img/pwa/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/img/pwa/piwebappC.png",
+      "sizes": "310x310",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/img/pwa/piwebappB.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#000000",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#000000"
+}

@@ -1,0 +1,155 @@
+#reader {
+  /* width: calc(100vw - 16px); */
+  max-width: 500px;
+  margin: 0 0 0 auto;
+  background-color: #bbceea;
+  border-radius: 15px;
+}
+
+#reader__scan_region {
+  display: flex;
+  background-color: #bbceea !important;
+  border-radius: 15px;
+}
+
+video,
+#qr-shaded-region {
+  border-radius: 15px;
+  max-height: 500px;
+}
+
+#reader div img {
+  display: none;
+}
+
+#reader div#reader__scan_region img {
+  display: block;
+  margin: auto;
+  opacity: 1 !important;
+  transform: scale(1.5);
+  height: 140px;
+}
+
+#reader__dashboard_section_swaplink {
+  color: #00749f;
+}
+
+/* All Reader Buttons */
+#reader__dashboard_section_csr button, input {
+  margin: 15px 0;
+  padding: 5px 12px;
+  border-radius: 15px;
+}
+
+/* Request Perms Button */
+#reader__dashboard_section_csr div button {
+  border: 2px solid #004950;
+  background: #67ed9bd9;
+  color: #0a3438;
+}
+
+/* Start & Stop Button */
+#reader__dashboard_section_csr span button {
+  border: 2px solid black;
+  color: #000;
+}
+
+/* Start Button */
+#reader__dashboard_section_csr span:last-child button:first-child {
+  background: #67ed6fd9;
+}
+
+/* Stop Button */
+#reader__dashboard_section_csr span:last-child button:last-child {
+  background: #ff8181d9;
+}
+
+#result {
+  width: 100%;
+  height: 100px;
+}
+
+.card, .accordion {
+  max-width: 500px;
+}
+
+.progress {
+  margin-top: 5px;
+  position: absolute;
+  width: calc(100% - 65px);
+  height: 15px;
+  display: inline-block;
+  margin-left: 14px;
+  background-color: #90add8ad;
+  border: 1px solid #00454980;
+}
+
+.material-icons.prog {
+  color: black;
+  font-size: 18pt;
+  display: inline-block;
+  width: 18px;
+  margin: 0 !important;
+}
+
+.progress-bar {
+  height: 100%;
+}
+
+.card-body i {
+  color: #003849;
+}
+
+.result {
+  background-color: green;
+  color: #fff;
+  padding: 20px;
+}
+
+.row {
+  display: flex;
+}
+
+#reader__scan_region {
+  background: white;
+}
+
+#showMob {
+  position: fixed;
+  top: 0;
+  right: 8px;
+  left: 8px;
+  z-index: 5;
+  box-shadow: 0 3px 40px 1px rgba(0, 0, 0, 0.91);
+}
+
+#showMob,
+#showMob .card-body {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+#hideMob {
+  z-index: 1;
+}
+
+@media screen and (max-width: 672px) {
+  #hideMob {
+    display: none;
+    padding: 0;
+  }
+
+  #hideMob .card {
+    display: none;
+  }
+
+  #reader {
+    margin: 0 8px;
+  }
+
+  video, #qr-shaded-region {
+    border-radius: 0;
+  }
+}
