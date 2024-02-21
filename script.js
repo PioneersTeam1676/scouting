@@ -1,6 +1,9 @@
 "use strict";
 
+/* WALL OF CONSTANTS */
+
 const pageCount = 6;
+const apiEndpoint = "https://team1676.com/scout/api/";
 
 const input0_UID = document.querySelector("#input0-uid");
 const input0_super_scout = document.querySelector("#superscout-switch");
@@ -40,6 +43,7 @@ const input4_next = document.querySelector("#input4-next");
 const viewMatchNumber = document.querySelector("#view-matchnum");
 const viewRobotNumber = document.querySelector("#view-robotnum");
 const viewAlliance = document.querySelector("#view-alliance");
+const viewPosition = document.querySelector("#view-position");
 const viewProfile = document.querySelector("#view-profile");
 const viewName = document.querySelector("#view-name");
 const viewUID = document.querySelector("#view-uid");
@@ -55,6 +59,12 @@ const settingsUID = document.querySelector("#settings-uid");
 
 const tabs = document.querySelector('ion-tabs');
 const textRangeSelect = document.querySelector('ion-range#text-select');
+
+const autoSyncToggle = document.querySelector('ion-toggle#auto-sync-toggle');
+const competitionSelect = document.querySelector('ion-select#competition-select');
+const allianceSelect = document.querySelector('ion-select#alliance-select');
+const positionSelect = document.querySelector('ion-select#position-select');
+const autoSyncDatetime = document.querySelector('span#auto-sync-datetime');
 
 input0_UID.addEventListener("input", () => {
     if (input0_UID.value % 3 == 0 && input0_UID.value % 5 == 0) {
