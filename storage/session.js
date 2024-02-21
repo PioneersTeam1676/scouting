@@ -44,6 +44,67 @@ if (retrieveData("session-super")) {
 }
 
 
+/* AUTO SYNC COMP, ALLIANCE, & POSITION */
+
+async function autoSyncNow() {
+    const response = await fetch(apiEndpoint + "sync.php");
+    const data = await response.json();
+    competitionSelect.value = data.competition;
+    allianceSelect.value = data.alliance;
+    positionSelect.value = data.position;
+    storeData("session-globals", data);
+    let date = new Date();
+    storeData("sync-timestamp", date.getTime());
+    autoSyncDatetime.innerHTML = date.getHours() + ":" + date.getHours() + ":" + date.getSeconds();
+}
+
+function setGlobalSelectorState(state) {
+    competitionSelect.disabled = state;
+    allianceSelect.disabled = state;
+    positionSelect.disabled = state;
+}
+
+autoSyncToggle.addEventListener('ionChange', function(e) {
+    if (autoSyncToggle.checked) {
+        setGlobalSelectorState(true);
+        storeData("sync-auto", true);
+        autoSyncNow();
+    } else {
+        setGlobalSelectorState(false);
+        storeData("sync-auto", false);
+        autoSyncDatetime.innerHTML = "N/A";
+    }
+});
+
+[competitionSelect, allianceSelect, positionSelect].forEach(select => {
+    select.addEventListener('ionChange', function(e) {
+        let sessionGlobals = retrieveData("session-globals");
+        sessionGlobals[select.dataset.ref] = select.value;
+        storeData("session-globals", sessionGlobals);
+    });
+});
+
+if (retrieveData("sync-auto") === null) {
+    storeData("sync-auto", true);
+    setGlobalSelectorState(true);
+}
+
+if (window.navigator.onLine && retrieveData("sync-auto")) {
+    autoSyncNow();
+    autoSyncToggle.checked = "true";
+    setGlobalSelectorState(true);
+} else if (retrieveData("sync-auto") && retrieveData("sync-timestamp")) {
+    autoSyncDatetime.innerHTML = retrieveData("sync-timestamp");
+} else {
+    let sessionGlobals = retrieveData("session-globals");
+    competitionSelect.value = sessionGlobals.competition;
+    allianceSelect.value = sessionGlobals.alliance;
+    positionSelect.value = sessionGlobals.position;
+    setGlobalSelectorState(false);
+    autoSyncDatetime.innerHTML = "N/A";
+}
+
+
 /* STORE ACTIVE TAB */
 
 tabs.addEventListener("ionTabsDidChange", function(){
@@ -153,6 +214,9 @@ elements.forEach(element => {
         viewAlliance.innerHTML = input1_team_red.checked ? "RED" : (input1_team_blue.checked ? "BLUE" : "");
         viewAlliance.style.color = input1_team_red.checked ? "#dc3545" : (input1_team_blue.checked ? "#0d6efd" : "");
     }
+    if (input1_noshow.checked || input1_closest.checked || input1_middle.checked || input1_furthest.checked) {
+        viewPosition.innerHTML = input1_noshow.checked ? "NO SHOW" : (input1_closest.checked ? "CLOSE" : (input1_middle.checked ? "MIDDLE" : (input1_furthest.checked ? "FAR" : "")));
+    }
 
     // Add an event listener to each element for real-time updates
     element.addEventListener('input', () => {
@@ -170,12 +234,13 @@ console.log(inputValues);
 
 /* LIVE UPDATE THE VIEW */
 
-elements.slice(0, 4).forEach(element => {
+elements.slice(0, 8).forEach(element => {
     element.addEventListener('input', () => {
         viewMatchNumber.innerHTML = input1_match.value;
         console.log(input1_match.value);
         viewRobotNumber.innerHTML = input1_team.value;
         viewAlliance.innerHTML = input1_team_red.checked ? "RED" : (input1_team_blue.checked ? "BLUE" : "");
         viewAlliance.style.color = input1_team_red.checked ? "#dc3545" : (input1_team_blue.checked ? "#0d6efd" : "");
+        viewPosition.innerHTML = input1_noshow.checked ? "NO SHOW" : (input1_closest.checked ? "CLOSE" : (input1_middle.checked ? "MIDDLE" : (input1_furthest.checked ? "FAR" : "")));
     });
 });
