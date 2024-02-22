@@ -346,11 +346,12 @@ span.blink {
 
 .quantity-button {
     width: 39px;
-    height: 34px;
+    height: 100%;
     display: inline-block;
-    float: right;
     position: relative;
     cursor: pointer;
+    /* make the background just be blurring the bg */
+    background: rgba(255, 255, 255, 0.2);
 }
 .quantity-button::before, .quantity-button::after {
     position: absolute;
@@ -362,6 +363,19 @@ span.blink {
     background-color: currentColor;
     display: block;
 }
+
+span.quantity-remove.quantity-button {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin-left: 2px;
+}
+
+span.quantity-add.quantity-button {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    margin-right: 2px;
+}
+
 .quantity-remove::after {
     display: none;
 }
