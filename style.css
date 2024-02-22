@@ -339,3 +339,34 @@ span.blink {
     opacity: 0;
   }
 }
+
+
+
+/* START styles for number inputs below */
+
+.quantity-button {
+    width: 39px;
+    height: 34px;
+    display: inline-block;
+    float: right;
+    position: relative;
+    cursor: pointer;
+}
+.quantity-button::before, .quantity-button::after {
+    position: absolute;
+    top: calc(50% - 1px);
+    left: calc(50% - 7px);
+    content: "";
+    width: 14px;
+    height: 2px;
+    background-color: currentColor;
+    display: block;
+}
+.quantity-remove::after {
+    display: none;
+}
+.quantity-add::after {
+    transform: rotate(90deg);
+}
+
+/* END styles for number inputs above */

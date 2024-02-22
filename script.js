@@ -336,3 +336,24 @@ function onlineTester() {
 }
 
 setInterval(onlineTester, 2500);
+
+/* INPUT BUTTONS */
+// Assumes that every add button:
+// 1. Comes before the input
+// 2. The input comes before a minus
+// 3. All the classes are correct
+let addButtons = document.querySelectorAll(".quantity-remove");
+addButtons.forEach((button) => {
+  // when + button clicked
+  button.addEventListener("click", () => {
+      if (button.nextElementSibling.value-1 >= 0) {
+          button.nextElementSibling.value--;
+        }
+    });
+    
+    
+    // when minus button clicked
+    button.nextElementSibling.nextElementSibling.addEventListener("click", () => {
+        button.nextElementSibling.value++;
+    });
+});
