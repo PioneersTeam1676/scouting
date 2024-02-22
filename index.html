@@ -268,7 +268,7 @@
                     </div>
                     <div style="height: 24px;">
                       <span class="view-value" id="view-alliance"></span> -
-                      <span class="view-infotitle">Close</span>
+                      <span class="view-infotitle" id="view-position"></span>
                     </div>
                   </div>
                   <div class="view-part view-right" id="view-user-container">
@@ -326,7 +326,7 @@
                     aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
 
-                <label class="form-label" for="position-radio">
+                <label class="form-label" for="position-radio" style="margin-bottom: 0;">
                   Alliance <span style="font-size: 10px">(Select One)</span>
                 </label>
 
@@ -338,7 +338,7 @@
                   <label class="btn btn-outline-primary" for="input1-team-blue">Blue</label>
                 </div>
 
-                <label class="form-label" for="position-radio">
+                <label class="form-label" for="position-radio" style="margin-bottom: 0; margin-top: 20px;">
                   Bot Position <span style="font-size: 10px">(Select One)</span>
                 </label>
 
@@ -573,7 +573,7 @@
                 <div class="prim-btn-container">
                   <button onclick="setPage(1, 3)"
                     class="mt-1 btn btn-spaced btn-danger btn-large page-btn-1">Cancel</button>
-                  <button class="mt-1 btn btn-spaced btn-success btn-large page-btn-3">Game Complete</button>
+                  <button id="input2-finish" class="mt-1 btn btn-spaced btn-success btn-large page-btn-3">Game Complete</button>
                 </div>
               </div>
 
@@ -1055,19 +1055,41 @@
 
             <ion-list inset="true">
               <ion-item>
-                <ion-toggle id="toggle" justify="space-between">Bold Text</ion-toggle>
-              </ion-item>
-            </ion-list>
-
-            <ion-list inset="true">
-              <ion-item>
                 <ion-range id="text-select" ticks="true" snaps="true" min="0" max="5">
                   <ion-icon name="text-outline" slot="start" style="transform: scale(0.81);"></ion-icon>
                   <ion-icon name="text-outline" slot="end" style="transform: scale(0.97);"></ion-icon>
                 </ion-range>
               </ion-item>
             </ion-list>
-
+            
+            <ion-list inset="true">
+              <ion-item>
+                <ion-toggle id="auto-sync-toggle" justify="space-between">Auto-Sync</ion-toggle>
+              </ion-item>
+              <ion-item>
+                <ion-select justify="space-between" label="Competition" id="competition-select" data-ref="competition" placeholder="Select competition">
+                  <ion-select-option value="training">Training</ion-select-option>
+                  <ion-select-option value="mt-olive">Mount Olive</ion-select-option>
+                  <ion-select-option value="montgomery">Montgomery</ion-select-option>
+                  <ion-select-option value="mt">Lehigh</ion-select-option>
+                  <ion-select-option value="championship">Houston</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-select justify="space-between" label="Alliance" id="alliance-select" data-ref="alliance" placeholder="Select alliance">
+                  <ion-select-option value="red">Red</ion-select-option>
+                  <ion-select-option value="blue">Blue</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-select justify="space-between" label="Position" id="position-select" data-ref="position" placeholder="Select position">
+                  <ion-select-option value="close">Close</ion-select-option>
+                  <ion-select-option value="middle">Middle</ion-select-option>
+                  <ion-select-option value="far">Far</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+            
             <ion-list inset="true">
               <ion-item button="true" onclick="logout();">
                 <ion-text color="primary" slot="start">Logout</ion-text>
@@ -1078,6 +1100,8 @@
                 </ion-text>
               </ion-item>
             </ion-list>
+            
+            <small style="margin-top: -6px; margin-left: 21px; position: relative; display: block; color: #ccc;">Last auto-sync: <span id="auto-sync-datetime">unknown</span></small>
 
             <ion-modal class="danger-zone" trigger="open-modal">
               <ion-list inset="true">

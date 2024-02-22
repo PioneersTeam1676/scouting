@@ -1,6 +1,9 @@
 "use strict";
 
+/* WALL OF CONSTANTS */
+
 const pageCount = 6;
+const apiEndpoint = "https://team1676.com/scout/api/";
 
 const input0_UID = document.querySelector("#input0-uid");
 const input0_super_scout = document.querySelector("#superscout-switch");
@@ -40,6 +43,7 @@ const input4_next = document.querySelector("#input4-next");
 const viewMatchNumber = document.querySelector("#view-matchnum");
 const viewRobotNumber = document.querySelector("#view-robotnum");
 const viewAlliance = document.querySelector("#view-alliance");
+const viewPosition = document.querySelector("#view-position");
 const viewProfile = document.querySelector("#view-profile");
 const viewName = document.querySelector("#view-name");
 const viewUID = document.querySelector("#view-uid");
@@ -55,6 +59,12 @@ const settingsUID = document.querySelector("#settings-uid");
 
 const tabs = document.querySelector('ion-tabs');
 const textRangeSelect = document.querySelector('ion-range#text-select');
+
+const autoSyncToggle = document.querySelector('ion-toggle#auto-sync-toggle');
+const competitionSelect = document.querySelector('ion-select#competition-select');
+const allianceSelect = document.querySelector('ion-select#alliance-select');
+const positionSelect = document.querySelector('ion-select#position-select');
+const autoSyncDatetime = document.querySelector('span#auto-sync-datetime');
 
 input0_UID.addEventListener("input", () => {
     if (input0_UID.value % 3 == 0 && input0_UID.value % 5 == 0) {
@@ -103,6 +113,10 @@ input1_next.addEventListener("click", () => {
     }
 });
 
+input2_next.addEventListener("click", () => {
+    submit();
+});
+
 input3_next.addEventListener("click", () => {
     const valid = validateFormInput(3);
     if (valid.valid) {
@@ -124,11 +138,11 @@ function validateFormInput(pageIdx) {
     if (pageIdx == 0) {
 
         const valid = isNumber(input0_UID.value);
-        if (!valid) return { valid: false, reason: "Student UID is not a number" };
+        if (!valid) return { valid: false, reason: "Student UID is not a number", data: JSON.stringify({ dat: input0_UID.value }) };
 
         // TODO: replace bound check with intended checking behavior
         const bound = parseFloat(input0_UID.value) > 1000;
-        if (!bound) return { valid: false, reason: "Student UID is not a valid UID" };
+        if (!bound) return { valid: false, reason: "Student UID is not a valid UID", data: JSON.stringify({ dat: input0_UID.value }) };
 
         return { valid: true, data: {
             uid: input0_UID.value,
@@ -156,12 +170,13 @@ function validateFormInput(pageIdx) {
 
         // check the robot position
         const noshow = input1_noshow.checked;
-        const closest = input1_noshow.checked;
-        const middle = input1_noshow.checked;
-        const furthest = input1_noshow.checked;
+        const closest = input1_closest.checked;
+        const middle = input1_middle.checked;
+        const furthest = input1_furthest.checked;
         const poses = [noshow, closest, middle, furthest];
 
         const total = poses.reduce((acc, value) => value === true ? acc + 1 : acc, 0);
+        console.log(poses);
 
         if (total == 0) return { valid: false, reason: "Must select a robot position" };
         if (total != 1) return { valid: false, reason: "Something went wrong with the total position" };
@@ -176,19 +191,19 @@ function validateFormInput(pageIdx) {
     } else if (pageIdx == 2) {
 
         // make sure scoring is all numbers
-        const spkrScoredTele = input2_speaker_scored_tele.value;
-        const spkrMissedTele = input2_speaker_missed_tele.value;
-        const spkrScoredAuto = input2_speaker_scored_auto.value;
-        const spkrMissedAuto = input2_speaker_missed_auto.value;
+        const spkrScoredTele = input2_speaker_scored_tele.value || 0;
+        const spkrMissedTele = input2_speaker_missed_tele.value || 0;
+        const spkrScoredAuto = input2_speaker_scored_auto.value || 0;
+        const spkrMissedAuto = input2_speaker_missed_auto.value || 0;
         const spkrScores = [spkrScoredTele, spkrMissedTele, spkrScoredAuto, spkrMissedAuto];
         if (spkrScores.some(score => !isNumber(score)))
-            return { valid: false, reason: "Must input numbers for speaker scoring" };
+            return { valid: false, reason: "Must input numbers for speaker scoring: " + spkrScores };
         if (spkrScores.some(score => score < 0))
             return { valid: false, reason: "Speaker scores must be more than or equal to zero" };
-        const ampScoredTele = input2_amp_scored_tele.value;
-        const ampMissedTele = input2_amp_missed_tele.value;
-        const ampScoredAuto = input2_amp_scored_auto.value;
-        const ampMissedAuto = input2_amp_missed_auto.value;
+        const ampScoredTele = input2_amp_scored_tele.value || 0;
+        const ampMissedTele = input2_amp_missed_tele.value || 0;
+        const ampScoredAuto = input2_amp_scored_auto.value || 0;
+        const ampMissedAuto = input2_amp_missed_auto.value || 0;
         const ampScores = [ampScoredTele, ampMissedTele, ampScoredAuto, ampMissedAuto]
         if (ampScores.some(score => !isNumber(score)))
             return { valid: false, reason: "Must input numbers for amp scoring" };
@@ -267,7 +282,6 @@ function setPage(num, pageCount) {
 }
 
 function submit() {
-
     if (input0_super_scout.checked) {
         alert("I didn't do superscouting yet oopsie...");
     } else {
@@ -276,21 +290,20 @@ function submit() {
         const form2 = validateFormInput(2);
     
         if (!form0.valid) {
-            alert("(Permanent Validation System) " + form0.reason);
+            alert("(Permanent Validation System) " + form0.reason + " - " + form0.data);
             return;
         } else if (!form1.valid) {
-            alert("(Permanent Validation System) " + form1.reason);
+            alert("(Permanent Validation System) " + form1.reason + " - " + form1.data);
             return;
         } else if (!form2.valid) {
-            alert("(Permanent Validation System) " + form2.reason);
+            alert("(Permanent Validation System) " + form2.reason + " - " + form2.data);
             return;
         }
     
         let payload = { ...form0.data, ...form1.data, ...form2.data };
-        console.log(`PAYLOAD: ${payload}`);
+        window.location.href = "https://team1676.com/scout/api/insert.php/?" + new URLSearchParams(payload).toString();
+        console.log(`PAYLOAD: ${payload}`); // TODO: Larry do everything
     }
-    
-
 }
 
 document.body.addEventListener("keydown", (e) => {
@@ -324,18 +337,14 @@ function onlineTester() {
 
 setInterval(onlineTester, 2500);
 
-
-/* logic for input number buttons */
-
+/* INPUT BUTTONS */
+// Assumes that every add button:
+// 1. Comes before the input
+// 2. The input comes before a minus
+// 3. All the classes are correct
 let addButtons = document.querySelectorAll(".quantity-remove");
-
-//assumes structure of
-//add button
-//input
-//remove button
-
 addButtons.forEach((button) => {
-  //when + button clicked
+  // when + button clicked
   button.addEventListener("click", () => {
       if (button.nextElementSibling.value-1 >= 0) {
           button.nextElementSibling.value--;
@@ -343,7 +352,7 @@ addButtons.forEach((button) => {
     });
     
     
-    //when minus button clicked
+    // when minus button clicked
     button.nextElementSibling.nextElementSibling.addEventListener("click", () => {
         button.nextElementSibling.value++;
     });
