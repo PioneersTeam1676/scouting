@@ -144,6 +144,7 @@
 
   <script defer src="./field.js"></script>
   <script defer src="./script.js"></script>
+  <script src="./components.js"></script>
 
   <script defer src="./storage/session.js"></script>
   <script defer src="./storage/users.js"></script>
@@ -211,8 +212,11 @@
           <hr>
           <div style="width: 100%; display: flex; justify-content: center;" class="form-check form-switch mb-2">
             <input class="form-check-input" type="checkbox" role="switch" id="superscout-switch" disabled>
-            <label class="form-check-label ps-2" for="superscout-switch"
-              style="font-size: 16px; padding-top: 0.15rem;">&nbsp;Enable Super-Scout Mode</label>
+            <label class="form-check-label ps-2" for="superscout-switch" style="font-size: 16px; padding-top: 0.15rem;">
+              &nbsp;
+              <help-btn msg="If you don't know what this is, you probably don't need to."></help-btn>
+              Enable Super-Scout Mode
+            </label>
           </div>
         </div>
       </ion-content>
@@ -261,10 +265,14 @@
                 <div style="display: flex; height: 85px; font-size: 18px;" class="page-invisible view">
                   <div class="view-part view-left" id="view-info-container">
                     <div style="height: 24px; margin-top: -4px;">
-                      <span class="view-infotitle">Match #</span><span class="view-value" id="view-matchnum"></span>
+                      <span class="view-infotitle">
+                        Match #</span><span class="view-value" id="view-matchnum">
+                      </span>
                     </div>
                     <div style="height: 24px;">
-                      <span class="view-infotitle">Robot #</span><span class="view-value" id="view-robotnum"></span>
+                      <span class="view-infotitle">
+                        Robot #</span><span class="view-value" id="view-robotnum">
+                      </span>
                     </div>
                     <div style="height: 24px;">
                       <span class="view-value" id="view-alliance"></span> -
@@ -315,18 +323,25 @@
                 <hr>
 
                 <div class="input-group input-group-sm mb-3">
-                  <span class="input-group-text" id="inputGroup-sizing-sm">Match #</span>
+                  <span class="input-group-text" id="inputGroup-sizing-sm">
+                    <help-btn msg="The current match you are viewing. If you are watching the first game, you would put in '1'."></help-btn>
+                    Match #
+                  </span>
                   <input id="input1-match" inputmode="numeric" pattern="\d*" class="form-control"
                     aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
 
                 <div class="input-group input-group-sm mb-3">
-                  <span class="input-group-text" id="inputGroup-sizing-sm">Team #</span>
+                  <span class="input-group-text" id="inputGroup-sizing-sm">
+                    <help-btn msg="The specific team you are viewing, out of the three. Every piece of data you give after this must only be about this team."></help-btn>
+                    Team #
+                  </span>
                   <input id="input1-team" inputmode="numeric" pattern="\d*" class="form-control"
                     aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
 
                 <label class="form-label" for="position-radio" style="margin-bottom: 0;">
+                  <help-btn msg="The color of your robot, either blue or red."></help-btn>
                   Alliance <span style="font-size: 10px">(Select One)</span>
                 </label>
 
@@ -339,6 +354,7 @@
                 </div>
 
                 <label class="form-label" for="position-radio" style="margin-bottom: 0; margin-top: 20px;">
+                  <help-btn msg="Relative to you, this is where the robot is. No-show = they didn't arrive. Close = closest to you, Far = farthest from you, Middle = middle."></help-btn>
                   Bot Position <span style="font-size: 10px">(Select One)</span>
                 </label>
 
@@ -375,12 +391,15 @@
 
               <div class="page page-invisible page-2">
 
-                <h1>Autonomous Stage</h1>
+                <h1>Autonomous Stage <help-btn msg="The first phase, which lasts 30 seconds."></help-btn></h1>
                 <hr>
                 <div class="input-row">
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="input2-robot-left-start">
-                    <label class="form-check-label" for="flexSwitchCheckChecked">Robot Left Start Zone?</label>
+                    <label class="form-check-label" for="flexSwitchCheckChecked">
+                      Robot Left Start
+                      <help-btn msg="Whether or not during the auto phase, the robot even moved out of the starting zone. If they didn't, deselect this."></help-btn>
+                    </label>
                   </div>
                 </div>
 
@@ -396,7 +415,7 @@
                         <span class="input-group-text">Scored</span>
                         <span class="quantity-remove quantity-button"></span>
                         <input id="input2-speaker-scored-auto" inputmode="numeric" pattern="\d*" class="form-control"
-                        value="0" readOnly aria-label="scored no amp">
+                          value="0" readOnly aria-label="scored no amp">
                         <span class="quantity-add quantity-button"></span>
                       </div>
                       <div class="input-group m-1">
@@ -439,7 +458,7 @@
 
               <div class="page page-invisible page-2">
 
-                <h1>Teleop Stage</h1>
+                <h1>Teleop Stage <help-btn msg="The second phase, which lasts 2 minutes."></help-btn></h1>
                 <hr>
 
                 <div class="scoring-container">
@@ -497,12 +516,12 @@
 
               <div class="page page-invisible page-2">
 
-                <h1>Endgame</h1>
+                <h1>Endgame <help-btn msg="The end of the game & post-game."></help-btn></h1>
                 <hr>
 
                 <div class="scoring-container">
                   <label class="form-label" for="position-radio">
-                    Trap Scoring
+                    Trap Scoring <help-btn msg="The slot for rings at the center, with the chains."></help-btn>
                   </label>
 
                   <div class="scoremiss-group-container">
@@ -511,15 +530,15 @@
                       <div class="input-group m-1">
                         <span class="input-group-text">Scored</span>
                         <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-trap-scored" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="scored">
+                        <input id="input2-trap-scored" inputmode="numeric" pattern="\d*" class="form-control" value="0"
+                          readOnly aria-label="scored">
                         <span class="quantity-add quantity-button"></span>
                       </div>
                       <div class="input-group m-1">
                         <span class="input-group-text">Missed</span>
                         <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-trap-missed" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="missed">
+                        <input id="input2-trap-missed" inputmode="numeric" pattern="\d*" class="form-control" value="0"
+                          readOnly aria-label="missed">
                         <span class="quantity-add quantity-button"></span>
                       </div>
                     </div>
@@ -528,9 +547,10 @@
 
                 <label class="form-label" for="position-radio">
                   Robot Parking <span style="font-size: 10px">(Select One)</span>
+                  <help-btn msg="At the end of the game, the robots need to park at the center. Climbing on the chain is when the robot pulls itself up and stays on a chain. Parking is when the robot just doesn't climb."></help-btn>
                 </label>
 
-                <div class="btn-group-vertical btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                <div style="padding: 5px; width: 100%" class="btn-group-vertical btn-group-sm" role="group" aria-label="Basic radio toggle button group">
                   <input id="input2-park-fell" type="radio" class="btn-check" name="parking" autocomplete="off">
                   <label class="btn btn-outline-primary" for="input2-park-fell">Fell Off Chain</label>
                   <input id="input2-park-ignored" type="radio" class="btn-check" name="parking" autocomplete="off">
@@ -547,7 +567,9 @@
 
               <div class="page page-invisible page-2">
                 <label class="form-label" for="position-radio">
-                  Note on peg above Robot? <span style="font-size: 10px">(Select One)</span>
+                  <help-btn msg="This is when a human player throws the ring like a frisbee onto the peg at the top of the center."></help-btn>
+                  Note on peg above Robot?
+                  <span style="font-size: 10px">(Select One)</span>
                 </label>
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
@@ -559,6 +581,7 @@
                 </div>
 
                 <label class="form-label" for="position-radio">
+                  <help-btn msg="This is when both teams sacrifice a ring to gain tournament points. Both teams will hit a button to do this."></help-btn>
                   Both teams score Coopertition Points? <span style="font-size: 10px">(Select One)</span>
                 </label>
 
@@ -572,8 +595,9 @@
                 <hr>
                 <div class="prim-btn-container">
                   <button onclick="setPage(1, 3)"
-                    class="mt-1 btn btn-spaced btn-danger btn-large page-btn-1">Cancel</button>
-                  <button id="input2-finish" class="mt-1 btn btn-spaced btn-success btn-large page-btn-3">Game Complete</button>
+                    class="mt-1 btn btn-spaced btn-danger btn-large page-btn-1">Cancel</button>&nbsp;
+                  <button id="input2-finish" class="mt-1 btn btn-spaced btn-success btn-large page-btn-3">Game
+                    Complete</button>
                 </div>
               </div>
 
@@ -629,7 +653,7 @@
                 </div>
 
                 <label class="form-label">
-                  Offensive Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+                  Offensive Rating <span style="font-size: 10px">(1 = awful, 5 = perfect)</span>
                 </label>
 
                 <div class="range">
@@ -651,7 +675,7 @@
                 </div>
 
                 <label class="form-label">
-                  Defensive Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+                  Defensive Rating <span style="font-size: 10px">(1 = awful, 5 = perfect)</span>
                 </label>
 
                 <div class="range">
@@ -702,47 +726,47 @@
                 <h1>Teleop Strategy</h1>
 
                 <label class="form-label" for="position-radio">
-                  Player / Drive Team Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+                  Player / Drive Team Rating <span style="font-size: 10px">(1 = awful, 5 = perfect)</span>
                 </label>
 
                 <div class="range">
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
                     id="range-player-rating-1">
-                  <label class="btn btn-outline-primary" for="range-player-rating-1">1</label>
+                  <label class="btn" for="range-player-rating-1">1</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
                     id="range-player-rating-2">
-                  <label class="btn btn-outline-primary" for="range-player-rating-2">2</label>
+                  <label class="btn" for="range-player-rating-2">2</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
                     id="range-player-rating-3">
-                  <label class="btn btn-outline-primary" for="range-player-rating-3">3</label>
+                  <label class="btn" for="range-player-rating-3">3</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
                     id="range-player-rating-4">
-                  <label class="btn btn-outline-primary" for="range-player-rating-4">4</label>
+                  <label class="btn" for="range-player-rating-4">4</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
                     id="range-player-rating-5">
-                  <label class="btn btn-outline-primary" for="range-player-rating-5">5</label>
+                  <label class="btn" for="range-player-rating-5">5</label>
                 </div>
 
                 <label class="form-label">
-                  Amp Strat Rating <span style="font-size: 10px">(0 = awful, 5 = perfect)</span>
+                  Amp Strat Rating <span style="font-size: 10px">(1 = awful, 5 = perfect)</span>
                 </label>
 
                 <div class="range">
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
                     id="range-ampstrat-rating-1">
-                  <label class="btn btn-outline-primary" for="range-ampstrat-rating-1">1</label>
+                  <label class="btn" for="range-ampstrat-rating-1">1</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
                     id="range-ampstrat-rating-2">
-                  <label class="btn btn-outline-primary" for="range-ampstrat-rating-2">2</label>
+                  <label class="btn" for="range-ampstrat-rating-2">2</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
                     id="range-ampstrat-rating-3">
-                  <label class="btn btn-outline-primary" for="range-ampstrat-rating-3">3</label>
+                  <label class="btn" for="range-ampstrat-rating-3">3</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
                     id="range-ampstrat-rating-4">
-                  <label class="btn btn-outline-primary" for="range-ampstrat-rating-4">4</label>
+                  <label class="btn" for="range-ampstrat-rating-4">4</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
                     id="range-ampstrat-rating-5">
-                  <label class="btn btn-outline-primary" for="range-ampstrat-rating-5">5</label>
+                  <label class="btn" for="range-ampstrat-rating-5">5</label>
                 </div>
 
                 <label class="form-label" for="position-radio">
@@ -1061,13 +1085,14 @@
                 </ion-range>
               </ion-item>
             </ion-list>
-            
+
             <ion-list inset="true">
               <ion-item>
                 <ion-toggle id="auto-sync-toggle" justify="space-between">Auto-Sync</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-select justify="space-between" label="Competition" id="competition-select" data-ref="competition" placeholder="Select competition">
+                <ion-select justify="space-between" label="Competition" id="competition-select" data-ref="competition"
+                  placeholder="Select competition">
                   <ion-select-option value="training">Training</ion-select-option>
                   <ion-select-option value="mt-olive">Mount Olive</ion-select-option>
                   <ion-select-option value="montgomery">Montgomery</ion-select-option>
@@ -1076,20 +1101,22 @@
                 </ion-select>
               </ion-item>
               <ion-item>
-                <ion-select justify="space-between" label="Alliance" id="alliance-select" data-ref="alliance" placeholder="Select alliance">
+                <ion-select justify="space-between" label="Alliance" id="alliance-select" data-ref="alliance"
+                  placeholder="Select alliance">
                   <ion-select-option value="red">Red</ion-select-option>
                   <ion-select-option value="blue">Blue</ion-select-option>
                 </ion-select>
               </ion-item>
               <ion-item>
-                <ion-select justify="space-between" label="Position" id="position-select" data-ref="position" placeholder="Select position">
+                <ion-select justify="space-between" label="Position" id="position-select" data-ref="position"
+                  placeholder="Select position">
                   <ion-select-option value="close">Close</ion-select-option>
                   <ion-select-option value="middle">Middle</ion-select-option>
                   <ion-select-option value="far">Far</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>
-            
+
             <ion-list inset="true">
               <ion-item button="true" onclick="logout();">
                 <ion-text color="primary" slot="start">Logout</ion-text>
@@ -1100,8 +1127,9 @@
                 </ion-text>
               </ion-item>
             </ion-list>
-            
-            <small style="margin-top: -6px; margin-left: 21px; position: relative; display: block; color: #ccc;">Last auto-sync: <span id="auto-sync-datetime">unknown</span></small>
+
+            <small style="margin-top: -6px; margin-left: 21px; position: relative; display: block; color: #ccc;">Last
+              auto-sync: <span id="auto-sync-datetime">unknown</span></small>
 
             <ion-modal class="danger-zone" trigger="open-modal">
               <ion-list inset="true">

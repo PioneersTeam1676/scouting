@@ -96,7 +96,7 @@ input0_next.addEventListener("click", () => {
         document.querySelector('ion-modal.check-user').dismiss();
         if (input0_super_scout.checked) $("#super-tag").css("display", "block");
     } else {
-        alert(`(Temporary Alert System) Invalid form. Reason: ${valid.reason}`);
+        alert(valid.reason);
     }
 });
 
@@ -109,7 +109,7 @@ input1_next.addEventListener("click", () => {
             setPage(2, pageCount);
         }
     } else {
-        alert(`(Temporary Alert System) Invalid form. Reason: ${valid.reason}`);
+        alert(valid.reason);
     }
 });
 
@@ -122,7 +122,7 @@ input3_next.addEventListener("click", () => {
     if (valid.valid) {
         setPage(4, pageCount);
     } else {
-        alert(`(Temporary Alert System) Invalid form. Reason: ${valid.reason}`);
+        alert(valid.reason);
     }
 });
 
@@ -144,10 +144,12 @@ function validateFormInput(pageIdx) {
         const bound = parseFloat(input0_UID.value) > 1000;
         if (!bound) return { valid: false, reason: "Student UID is not a valid UID", data: JSON.stringify({ dat: input0_UID.value }) };
 
-        return { valid: true, data: {
-            uid: input0_UID.value,
-            super_scout: input0_super_scout.checked
-        } };
+        return {
+            valid: true, data: {
+                uid: input0_UID.value,
+                super_scout: input0_super_scout.checked
+            }
+        };
 
     } else if (pageIdx == 1) {
 
@@ -159,9 +161,9 @@ function validateFormInput(pageIdx) {
 
         // make sure they aren't zero or less
         const matchBound = parseFloat(input1_match.value) >= 0;
-        if (!matchBound) return { valid: false, reason: "Match value is not within bounds" };
+        if (!matchBound) return { valid: false, reason: "Match value must be more than or equal to zero" };
         const teamBound = parseFloat(input1_match.value) >= 0;
-        if (!teamBound) return { valid: false, reason: "Team value is not within bounds" };
+        if (!teamBound) return { valid: false, reason: "Team value value must be more than or equal to zero" };
 
         // check the team color
         const teamRed = input1_team_red.checked;
@@ -178,15 +180,17 @@ function validateFormInput(pageIdx) {
         const total = poses.reduce((acc, value) => value === true ? acc + 1 : acc, 0);
         console.log(poses);
 
-        if (total == 0) return { valid: false, reason: "Must select a robot position" };
+        if (total == 0) return { valid: false, reason: "Must select a robot starting position." };
         if (total != 1) return { valid: false, reason: "Something went wrong with the total position" };
 
-        return { valid: true, data: {
-            match_num: input1_match.value, 
-            team_num: input1_team.value, 
-            alliance: teamBlue ? 2 : teamRed ? 1 : 0,
-            position: noshow ? 0 : closest ? 3 : middle ? 2 : furthest ? 1 : 0,
-        } };
+        return {
+            valid: true, data: {
+                match_num: input1_match.value,
+                team_num: input1_team.value,
+                alliance: teamBlue ? 2 : teamRed ? 1 : 0,
+                position: noshow ? 0 : closest ? 3 : middle ? 2 : furthest ? 1 : 0,
+            }
+        };
 
     } else if (pageIdx == 2) {
 
@@ -197,7 +201,7 @@ function validateFormInput(pageIdx) {
         const spkrMissedAuto = input2_speaker_missed_auto.value || 0;
         const spkrScores = [spkrScoredTele, spkrMissedTele, spkrScoredAuto, spkrMissedAuto];
         if (spkrScores.some(score => !isNumber(score)))
-            return { valid: false, reason: "Must input numbers for speaker scoring: " + spkrScores };
+            return { valid: false, reason: "Must input numbers for speaker scoring" };
         if (spkrScores.some(score => score < 0))
             return { valid: false, reason: "Speaker scores must be more than or equal to zero" };
         const ampScoredTele = input2_amp_scored_tele.value || 0;
@@ -228,19 +232,21 @@ function validateFormInput(pageIdx) {
         if (total == 0) return { valid: false, reason: "Must select a robot parking position" };
         if (total != 1) return { valid: false, reason: "Something went wrong with the total parking position" };
 
-        return { valid: true, data: {
-            tele_spkr_scored: spkrScoredTele,
-            tele_spkr_missed: spkrMissedTele,
-            auto_spkr_scored: spkrScoredAuto,
-            auto_spkr_missed: spkrMissedAuto,
-            tele_amp_scored: ampScoredTele,
-            tele_amp_missed: ampMissedTele,
-            auto_amp_scored: ampScoredAuto,
-            auto_amp_missed: ampMissedAuto,
-            trap_scored: trapScored,
-            trap_missed: trapMissed,
-            climb: parkFell ? 1 : parkIgnored ? 2 : parkSolo ? 3 : parkChain ? 4 : parkBuddy ? 5 : 0
-        } };
+        return {
+            valid: true, data: {
+                tele_spkr_scored: spkrScoredTele,
+                tele_spkr_missed: spkrMissedTele,
+                auto_spkr_scored: spkrScoredAuto,
+                auto_spkr_missed: spkrMissedAuto,
+                tele_amp_scored: ampScoredTele,
+                tele_amp_missed: ampMissedTele,
+                auto_amp_scored: ampScoredAuto,
+                auto_amp_missed: ampMissedAuto,
+                trap_scored: trapScored,
+                trap_missed: trapMissed,
+                climb: parkFell ? 1 : parkIgnored ? 2 : parkSolo ? 3 : parkChain ? 4 : parkBuddy ? 5 : 0
+            }
+        };
 
     } else if (pageIdx == 3) {
 
@@ -275,7 +281,6 @@ function setPage(num, pageCount) {
     } else {
         view.classList.add("page-invisible");
         view.classList.remove("page-visible");
-
     }
 
     window.scrollTo(0, 0);
@@ -288,18 +293,18 @@ function submit() {
         const form0 = validateFormInput(0);
         const form1 = validateFormInput(1);
         const form2 = validateFormInput(2);
-    
+
         if (!form0.valid) {
-            alert("(Permanent Validation System) " + form0.reason + " - " + form0.data);
+            alert(form0.reason + " - " + form0.data);
             return;
         } else if (!form1.valid) {
-            alert("(Permanent Validation System) " + form1.reason + " - " + form1.data);
+            alert(form1.reason + " - " + form1.data);
             return;
         } else if (!form2.valid) {
-            alert("(Permanent Validation System) " + form2.reason + " - " + form2.data);
+            alert(form2.reason + " - " + form2.data);
             return;
         }
-    
+
         let payload = { ...form0.data, ...form1.data, ...form2.data };
         window.location.href = "https://team1676.com/scout/api/insert.php/?" + new URLSearchParams(payload).toString();
         console.log(`PAYLOAD: ${payload}`); // TODO: Larry do everything
@@ -342,18 +347,29 @@ setInterval(onlineTester, 2500);
 // 1. Comes before the input
 // 2. The input comes before a minus
 // 3. All the classes are correct
-let addButtons = document.querySelectorAll(".quantity-remove");
+const addButtons = document.querySelectorAll(".quantity-remove");
 addButtons.forEach((button) => {
-  // when + button clicked
-  button.addEventListener("click", () => {
-      if (button.nextElementSibling.value-1 >= 0) {
-          button.nextElementSibling.value--;
+    // when + button clicked
+    button.addEventListener("click", () => {
+        if (button.nextElementSibling.value - 1 >= 0) {
+            button.nextElementSibling.value--;
         }
     });
-    
-    
+
+
     // when minus button clicked
     button.nextElementSibling.nextElementSibling.addEventListener("click", () => {
         button.nextElementSibling.value++;
     });
 });
+
+/* RANGE ACCESSIBILITY */
+const ranges = document.querySelectorAll("div.range");
+ranges.forEach(range => {
+    const rangeButtons = range.querySelectorAll("label.btn");
+    rangeButtons.item(0).classList.add(["btn-outline-danger"]);
+    rangeButtons.item(1).classList.add(["btn-outline-warning"]);
+    rangeButtons.item(2).classList.add(["btn-outline-warning"]);
+    rangeButtons.item(3).classList.add(["btn-outline-warning"]);
+    rangeButtons.item(4).classList.add(["btn-outline-success"])
+})
