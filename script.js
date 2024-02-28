@@ -361,14 +361,12 @@ function setPage(num, pageCount) {
     } else {
         view.classList.add("page-invisible");
         view.classList.remove("page-visible");
-
     }
 
     window.scrollTo(0, 0);
 }
 
 function submit() {
-
     if (input0_super_scout.checked) {
         alert("I didn't do superscouting yet oopsie...");
     } else {
@@ -377,21 +375,19 @@ function submit() {
         const form2 = validateFormInput(2);
     
         if (!form0.valid) {
-            alert(form0.reason);
+            alert(form0.reason + " - " + form0.data);
             return;
         } else if (!form1.valid) {
-            alert(form1.reason);
+            alert(form1.reason + " - " + form1.data);
             return;
         } else if (!form2.valid) {
-            alert(form2.reason);
+            alert(form2.reason + " - " + form2.data);
             return;
         }
     
         let payload = { ...form0.data, ...form1.data, ...form2.data };
         console.log(`PAYLOAD: ${payload}`);
     }
-    
-
 }
 
 document.body.addEventListener("keydown", (e) => {
@@ -405,7 +401,6 @@ document.body.addEventListener("keydown", (e) => {
     else if (c == "4") setPage(3, pageCount);
     else if (c == "5") setPage(4, pageCount);
 });
-
 
 /* ONLINE DETECTOR */
 let onlineIndicator = document.getElementById("online-indicator");
