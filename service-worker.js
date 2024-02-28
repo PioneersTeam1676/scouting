@@ -1,9 +1,5 @@
-const version = 'v1.0.0';
-
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(version).then(cache => {
-      return cache.addAll([
+const version = 'v1.1.17';
+const filesToCache = [
         "/scout/index.html",
         "/scout/offline.html",
         "/scout/manifest.json",
@@ -258,12 +254,20 @@ self.addEventListener('install', event => {
         "/scout/assets/img/profiles/100/f76862b669a3.jpg",
         "/scout/assets/img/profiles/100/f7f4caaa4f67.jpg",
         "/scout/assets/img/profiles/100/fb601c88dbe3.jpg"
-      ]);
+      ];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(version).then(cache => {
+      return cache.addAll(filesToCache);
     })
   );
 });
 
 self.addEventListener('fetch', event => {
+  if (event.request.url.includes('/api/')) {
+    return;
+  }    
   event.respondWith(
     caches.match(event.request).then(response => {
       return response || fetch(event.request).then(response => {
@@ -283,4 +287,32 @@ self.addEventListener('message', (event) => {
   if (event.data.action === 'getVersion') {
     event.source.postMessage({ action: 'version', version: version });
   }
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
+
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== version) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+async function resetCaches() {
+  // Delete old caches
+  const cacheNames = await caches.keys();
+  const oldCaches = cacheNames.filter(cacheName => cacheName !== version);
+  await Promise.all(oldCaches.map(cacheName => caches.delete(cacheName)));
+
+  // Optionally, open the current cache and add new assets
+  const cache = await caches.open(version);
+  await cache.addAll(filesToCache);
+}

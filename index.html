@@ -8,7 +8,7 @@
   <title>Scouting '24</title>
   <meta name="description" content="FRC Team 1676 - Scouting System 2024" />
 
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="manifest.json?v=2" />
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Scouting 24'">
@@ -106,6 +106,14 @@
 
   <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
   <script src="./assets/js/bootstrap.bundle.min.js"></script>
+  
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <script>
+      const apiEndpoint = "https://team1676.com/scout/api/";
+  </script>
 
   <!--<script type="module" src="./assets/js/ionic/ionic.esm.js"></script>-->
   <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
@@ -125,6 +133,15 @@
           navigator.serviceWorker.ready.then(function (registration) {
             registration.active.postMessage({ action: 'getVersion' });
           });
+          
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                promptUserToUpdate(newWorker);
+              }
+            });
+          });
         }).catch(function (err) {
           document.getElementById('sw-version').innerText = 'Service worker registration failed: ' + err;
         });
@@ -133,8 +150,21 @@
           document.getElementById('sw-version').innerText = `Service Worker ${event.data.version}`;
         }
       });
+      let refreshing;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        reloadSite();
+        refreshing = true;
+      });
     } else {
       document.getElementById('sw-version').innerText = 'Service workers not supported.';
+    }
+    
+    function promptUserToUpdate(worker) {
+      // Implement user confirmation dialog logic here, e.g., a simple confirm dialog
+      if (confirm("New version available! Would you like to update?")) {
+        worker.postMessage({ action: 'skipWaiting' });
+      }
     }
   </script>
 
@@ -212,10 +242,11 @@
           <hr>
           <div style="width: 100%; display: flex; justify-content: center;" class="form-check form-switch mb-2">
             <input class="form-check-input" type="checkbox" role="switch" id="superscout-switch" disabled>
-            <label class="form-check-label ps-2" for="superscout-switch" style="font-size: 16px; padding-top: 0.15rem;">
-              &nbsp;
-              <help-btn msg="If you don't know what this is, you probably don't need to."></help-btn>
-              Enable Super-Scout Mode
+            <label class="form-check-label ps-2" for="superscout-switch"
+              style="font-size: 16px; padding-top: 0.15rem;">
+                &nbsp;
+                <help-btn msg="If you don't know what this is, you probably don't need to."></help-btn>
+                Enable Super-Scout Mode
             </label>
           </div>
         </div>
@@ -253,7 +284,7 @@
       </ion-content>
     </ion-modal>
 
-    <ion-tabs>
+    <ion-tabs id="bottom-tabs">
       <ion-tab tab="scout">
         <ion-nav id="scout-nav"></ion-nav>
         <div id="scout-page">
@@ -265,14 +296,10 @@
                 <div style="display: flex; height: 85px; font-size: 18px;" class="page-invisible view">
                   <div class="view-part view-left" id="view-info-container">
                     <div style="height: 24px; margin-top: -4px;">
-                      <span class="view-infotitle">
-                        Match #</span><span class="view-value" id="view-matchnum">
-                      </span>
+                      <span class="view-infotitle">Match #</span><span class="view-value" id="view-matchnum"></span>
                     </div>
                     <div style="height: 24px;">
-                      <span class="view-infotitle">
-                        Robot #</span><span class="view-value" id="view-robotnum">
-                      </span>
+                      <span class="view-infotitle">Robot #</span><span class="view-value" id="view-robotnum"></span>
                     </div>
                     <div style="height: 24px;">
                       <span class="view-value" id="view-alliance"></span> -
@@ -413,17 +440,33 @@
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
                         <span class="input-group-text">Scored</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-speaker-scored-auto" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="scored no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-speaker-scored-auto" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="scored no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                       <div class="input-group m-1">
                         <span class="input-group-text">Missed</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-speaker-missed-auto" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="missed no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-speaker-missed-auto" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="missed no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -439,17 +482,33 @@
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
                         <span class="input-group-text">Scored</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-amp-scored-auto" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="scored no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-amp-scored-auto" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="scored no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                       <div class="input-group m-1">
                         <span class="input-group-text">Missed</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-amp-missed-auto" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="missed no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-amp-missed-auto" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="missed no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -471,17 +530,33 @@
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
                         <span class="input-group-text">Scored</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-speaker-scored-tele" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="scored no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-speaker-scored-tele" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="scored no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                       <div class="input-group m-1">
                         <span class="input-group-text">Missed</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-speaker-missed-tele" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="missed no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-speaker-missed-tele" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="missed no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -497,17 +572,33 @@
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
                         <span class="input-group-text">Scored</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-amp-scored-tele" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="scored no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-amp-scored-tele" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="scored no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                       <div class="input-group m-1">
                         <span class="input-group-text">Missed</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-amp-missed-tele" inputmode="numeric" pattern="\d*" class="form-control"
-                          value="0" readOnly aria-label="missed no amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-amp-missed-tele" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="missed no amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -529,17 +620,33 @@
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
                         <span class="input-group-text">Scored</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-trap-scored" inputmode="numeric" pattern="\d*" class="form-control" value="0"
-                          readOnly aria-label="scored">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-trap-scored" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="scored">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                       <div class="input-group m-1">
                         <span class="input-group-text">Missed</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input id="input2-trap-missed" inputmode="numeric" pattern="\d*" class="form-control" value="0"
-                          readOnly aria-label="missed">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input id="input2-trap-missed" inputmode="numeric" pattern="\d*" class="form-control input-number"
+                          placeholder="0" aria-label="missed">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -556,7 +663,7 @@
                   <input id="input2-park-ignored" type="radio" class="btn-check" name="parking" autocomplete="off">
                   <label class="btn btn-outline-primary" for="input2-park-ignored">Did Not Park</label>
                   <input id="input2-park-solo" type="radio" class="btn-check" name="parking" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="input2-park-solo">Parked Bot</label>
+                  <label class="btn btn-outline-primary" for="input2-park-solo">Bot Parked</label>
                   <input id="input2-park-chain" type="radio" class="btn-check" name="parking" autocomplete="off">
                   <label class="btn btn-outline-primary" for="input2-park-chain">Bot Climbed Chain</label>
                   <input id="input2-park-chain-buddy" type="radio" class="btn-check" name="parking" autocomplete="off">
@@ -638,15 +745,31 @@
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
                         <span class="input-group-text">Scored</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input type="number" class="form-control" value="0" readOnly aria-label="scored amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input type="number" class="form-control input-number" id="input4-amplified-scored" placeholder="0" aria-label="scored amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                       <div class="input-group m-1">
                         <span class="input-group-text">Missed</span>
-                        <span class="quantity-remove quantity-button"></span>
-                        <input type="number" class="form-control" value="0" readOnly aria-label="missed amp">
-                        <span class="quantity-add quantity-button"></span>
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
+                            <ion-icon name="remove-outline"></ion-icon>
+                          </button>
+                        </span>
+                        <input type="number" class="form-control input-number" id="input4-amplified-scored" placeholder="0" aria-label="missed amp">
+                        <span class="input-group-btn">
+                          <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
+                            <ion-icon name="add-outline"></ion-icon>
+                          </button>
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -658,20 +781,20 @@
 
                 <div class="range">
                   <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
-                    id="range-offense-rating-1">
-                  <label class="btn btn-outline-primary" for="range-offense-rating-1">1</label>
+                    id="range-offense-rating-1" value="1">
+                  <label class="btn" for="range-offense-rating-1">1</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
-                    id="range-offense-rating-2">
-                  <label class="btn btn-outline-primary" for="range-offense-rating-2">2</label>
+                    id="range-offense-rating-2" value="2">
+                  <label class="btn" for="range-offense-rating-2">2</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
-                    id="range-offense-rating-3">
-                  <label class="btn btn-outline-primary" for="range-offense-rating-3">3</label>
+                    id="range-offense-rating-3" value="3">
+                  <label class="btn" for="range-offense-rating-3">3</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
-                    id="range-offense-rating-4">
-                  <label class="btn btn-outline-primary" for="range-offense-rating-4">4</label>
+                    id="range-offense-rating-4" value="4">
+                  <label class="btn" for="range-offense-rating-4">4</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-offense-rating"
-                    id="range-offense-rating-5">
-                  <label class="btn btn-outline-primary" for="range-offense-rating-5">5</label>
+                    id="range-offense-rating-5" value="5">
+                  <label class="btn" for="range-offense-rating-5">5</label>
                 </div>
 
                 <label class="form-label">
@@ -680,42 +803,42 @@
 
                 <div class="range">
                   <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
-                    id="range-defense-rating-1">
-                  <label class="btn btn-outline-primary" for="range-defense-rating-1">1</label>
+                    id="range-defense-rating-1" value="1">
+                  <label class="btn" for="range-defense-rating-1">1</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
-                    id="range-defense-rating-2">
-                  <label class="btn btn-outline-primary" for="range-defense-rating-2">2</label>
+                    id="range-defense-rating-2" value="2">
+                  <label class="btn" for="range-defense-rating-2">2</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
-                    id="range-defense-rating-3">
-                  <label class="btn btn-outline-primary" for="range-defense-rating-3">3</label>
+                    id="range-defense-rating-3" value="3">
+                  <label class="btn" for="range-defense-rating-3">3</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
-                    id="range-defense-rating-4">
-                  <label class="btn btn-outline-primary" for="range-defense-rating-4">4</label>
+                    id="range-defense-rating-4" value="4">
+                  <label class="btn" for="range-defense-rating-4">4</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-defense-rating"
-                    id="range-defense-rating-5">
-                  <label class="btn btn-outline-primary" for="range-defense-rating-5">5</label>
+                    id="range-defense-rating-5" value="5">
+                  <label class="btn" for="range-defense-rating-5">5</label>
                 </div>
 
                 <label class="form-label" for="position-radio">
                   Notes on Offensive / Defensive
                 </label>
 
-                <textarea placeholder="Type here"></textarea>
+                <textarea placeholder="Type here" id="input4-offense-defense-notes"></textarea>
 
                 <label class="form-label" for="position-radio">
                   Scoring focus <span style="font-size: 10px">(Select One)</span>
                 </label>
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-                  <input id="input4-score-nopref" type="radio" class="btn-check" name="score-pref" autocomplete="off"
+                  <input id="input4-score-nopref" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="3"
                     checked>
                   <label class="btn btn-outline-primary" for="input4-score-nopref">No Pref</label>
 
-                  <input id="input4-score-amp" type="radio" class="btn-check" name="score-pref" autocomplete="off"
+                  <input id="input4-score-amp" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="1"
                     checked>
                   <label class="btn btn-outline-primary" for="input4-score-amp">Amp</label>
 
-                  <input id="input4-score-speaker" type="radio" class="btn-check" name="score-pref" autocomplete="off"
+                  <input id="input4-score-speaker" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="2"
                     checked>
                   <label class="btn btn-outline-primary" for="input4-score-speaker">Speaker</label>
                 </div>
@@ -731,19 +854,19 @@
 
                 <div class="range">
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
-                    id="range-player-rating-1">
+                    id="range-player-rating-1" value="1">
                   <label class="btn" for="range-player-rating-1">1</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
-                    id="range-player-rating-2">
+                    id="range-player-rating-2" value="2">
                   <label class="btn" for="range-player-rating-2">2</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
-                    id="range-player-rating-3">
+                    id="range-player-rating-3" value="3">
                   <label class="btn" for="range-player-rating-3">3</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
-                    id="range-player-rating-4">
+                    id="range-player-rating-4" value="4">
                   <label class="btn" for="range-player-rating-4">4</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-player-rating"
-                    id="range-player-rating-5">
+                    id="range-player-rating-5" value="5">
                   <label class="btn" for="range-player-rating-5">5</label>
                 </div>
 
@@ -753,19 +876,19 @@
 
                 <div class="range">
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
-                    id="range-ampstrat-rating-1">
+                    id="range-ampstrat-rating-1" value="1">
                   <label class="btn" for="range-ampstrat-rating-1">1</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
-                    id="range-ampstrat-rating-2">
+                    id="range-ampstrat-rating-2" value="2">
                   <label class="btn" for="range-ampstrat-rating-2">2</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
-                    id="range-ampstrat-rating-3">
+                    id="range-ampstrat-rating-3" value="3">
                   <label class="btn" for="range-ampstrat-rating-3">3</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
-                    id="range-ampstrat-rating-4">
+                    id="range-ampstrat-rating-4" value="4">
                   <label class="btn" for="range-ampstrat-rating-4">4</label>
                   <input autocomplete="off" class="btn-check" type="radio" name="range-ampstrat-rating"
-                    id="range-ampstrat-rating-5">
+                    id="range-ampstrat-rating-5" value="5">
                   <label class="btn" for="range-ampstrat-rating-5">5</label>
                 </div>
 
@@ -773,15 +896,87 @@
                   Notes on amp strategy
                 </label>
 
-                <textarea placeholder="Type here"></textarea>
+                <textarea placeholder="Type here" id="input4-amp-strat-notes"></textarea>
+              </div>
+            
+              <div class="page page-invisible page-4">
+                <h1>Endgame</h1>
+                
+                <!--<div class="scoring-container">
+                  <label class="form-label" for="input4-climb-attempts">
+                    Climb Attempts
+                  </label>
+                  <div class="input-group m-1">
+                    <input type="number" class="form-control" id="input4-climb-attempts" placeholder="0" aria-label="climb attempts">
+                  </div>
+                  <label class="form-label" for="input4-trap-attempts">
+                    Trap Attempts
+                  </label>
+                  <div class="input-group m-1">
+                    <input type="number" class="form-control" id="input4-trap-attempts" placeholder="0" aria-label="trap attempts">
+                  </div>
+                </div>
+                
+                <div class="input-row">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="input4-human-frisbee">
+                    <label class="form-check-label" for="input4-human-frisbee" style="font-size: 12pt;">Human frisbee?</label>
+                  </div>
+                </div>-->
+                
+                <label class="form-label">
+                  Climb Rating <span style="font-size: 10px">(1 = awful, 5 = perfect)</span>
+                </label>
 
+                <div class="range">
+                  <input autocomplete="off" class="btn-check" type="radio" name="climb-rating"
+                    id="climb-rating-1" value="1">
+                  <label class="btn" for="climb-rating-1">1</label>
+                  <input autocomplete="off" class="btn-check" type="radio" name="climb-rating"
+                    id="climb-rating-2" value="2">
+                  <label class="btn" for="climb-rating-2">2</label>
+                  <input autocomplete="off" class="btn-check" type="radio" name="climb-rating"
+                    id="climb-rating-3" value="3">
+                  <label class="btn" for="climb-rating-3">3</label>
+                  <input autocomplete="off" class="btn-check" type="radio" name="climb-rating"
+                    id="climb-rating-4" value="4">
+                  <label class="btn" for="climb-rating-4">4</label>
+                  <input autocomplete="off" class="btn-check" type="radio" name="climb-rating"
+                    id="climb-rating-5" value="5">
+                  <label class="btn" for="climb-rating-5">5</label>
+                </div>
+                
+                <label class="form-label" for="position-radio">
+                  Notes on Climb
+                </label>
+                
+                <textarea placeholder="Type here" id="input4-climb-notes"></textarea>
+                
+                <label class="form-label" for="position-radio">
+                  Robot broke <span style="font-size: 10px">(Select One)</span>
+                </label>
+
+                <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
+                  <input id="input4-broken-no" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="0" checked>
+                  <label class="btn btn-outline-primary" for="input4-broken-no">N/A</label>
+
+                  <input id="input4-broken-comms" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="1">
+                  <label class="btn btn-outline-primary" for="input4-broken-comms">Lost Comms</label>
+
+                  <input id="input4-broken-mechanical" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="2">
+                  <label class="btn btn-outline-primary" for="input4-broken-mechanical">Mech Err</label>
+                  
+                  <input id="input4-broken-estop" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="3">
+                  <label class="btn btn-outline-primary" for="input4-broken-estop">E-Stop</label>
+                </div>
+                
+                <br/><br/>
+                  
                 <div class="continue-container">
-                  <button id="input4-next" class="mt-1 btn btn-primary btn-large page-btn-5">Continue</button>
-                  <p class="warning">
-                    Make sure that all the information above is correct before continuing!
-                  </p>
+                  <button id="input4-next" class="mt-1 btn btn-primary btn-large page-btn-5">Submit</button>
                 </div>
               </div>
+             
             </div>
 
           </ion-content>
@@ -800,7 +995,7 @@
                 <ion-segment-button value="team">
                   <ion-label>Team Number</ion-label>
                 </ion-segment-button>
-                <ion-segment-button value="match">
+                <ion-segment-button value="match" disabled="true">
                   <ion-label>Match Number</ion-label>
                 </ion-segment-button>
               </ion-segment>
@@ -819,19 +1014,51 @@
           </ion-content>
 
           <script>
+          
+            let scout_data;
+            
+            function fetchScoutData() {
+                try {
+                    $.ajax({
+                        url: apiEndpoint + "select.php",
+                        type: "GET",
+                        contentType: "application/json",
+                        success: function(response, status){
+                            if (JSON.parse(response).response_code == 200) {
+                                scout_data = JSON.parse(response).select_data;
+                                generateItemsAndButtons();
+                            } else {
+                                alert(response + "\nStatus: " + status);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert(error + "\nStatus: " + status);
+                        }
+                    });
+                } catch {
+                    console.log("offline - can't fetch server data");
+                }
+            }
+            
+            fetchScoutData();
+          
+            setInterval(function() {
+                fetchScoutData();
+            }, 10000);
+          
             // Function to generate items and buttons
-            function generateItemsAndButtons(startIndex, count) {
+            function generateItemsAndButtons() {
               const itemList = document.getElementById('item-list');
-              for (let i = startIndex; i <= count; i++) {
+              itemList.innerHTML = "";
+              scout_data.forEach(function(match) {
+                const i = match.match_num;
                 const item = document.createElement('ion-item');
                 const button = document.createElement('ion-button');
                 button.textContent = `Match ${i}`; // Button text "Match i"
                 button.id = `button-${i}`; // Assign ID to the button
-                button.onclick = () => navigateToPage(i);
+                button.onclick = () => navigateToPage(i, match);
                 // Generate 6 random numbers
-                const numbers = Array.from({
-                  length: 6
-                }, () => Math.floor(Math.random() * 1000));
+                const numbers = [match.team_num];
                 // Store the numbers as a data attribute on the button
                 button.dataset.numbers = numbers.join(',');
                 button.classList.add("open-match-btn");
@@ -843,17 +1070,18 @@
                 item.appendChild(button);
                 item.appendChild(numbersText);
                 itemList.appendChild(item);
-              }
+              });
             }
-            // Generate initial items and buttons
-            generateItemsAndButtons(1, 250); // Generate items from 1 to 250
+            
             // Function to navigate to a specific page
-            function navigateToPage(pageIndex) {
+            function navigateToPage(pageIndex, matchData) {
               // Create a new page element
               const newPage = document.createElement('ion-page');
+              let matchDataReadable = JSON.stringify(matchData);
               newPage.innerHTML = `
         <ion-content fullscreen class="ion-padding">
-          <h1>Page ${pageIndex}</h1>
+          <h1>Match ${pageIndex} has been submitted</h1>
+          <p>${matchDataReadable}</p>
           <ion-button onclick="closePage(${pageIndex})" expand="block">Close Page</ion-button>
         </ion-content>
       `;
@@ -867,8 +1095,6 @@
               // Clear existing pages
               const pageContainer = document.getElementById('page-container');
               pageContainer.innerHTML = '';
-              // Re-generate initial items and buttons
-              generateItemsAndButtons(1, 250);
             }
             // Function to disable button based on ID
             function disableButton(buttonId) {
@@ -881,8 +1107,6 @@
             function disableButtons(buttonIds) {
               buttonIds.forEach(disableButton);
             }
-            // Disable buttons with IDs "button-5" and "button-10"
-            disableButtons(["button-5", "button-10"]);
             // Function to filter buttons based on entered numbers
             function filterButtonsByNumbers(numbers, mode) {
               const buttons = document.querySelectorAll('ion-button.open-match-btn');
@@ -974,71 +1198,16 @@
 
           <ion-content class="ion-content-black">
 
-            <ion-list>
+            <!--<ion-list>
               <ion-item button="true">
                 <ion-text color="primary" slot="start">
                   <ion-icon name="qr-code-outline"></ion-icon>
                   Transfer from Computer
                 </ion-text>
               </ion-item>
-            </ion-list>
+            </ion-list>-->
 
-            <ion-list>
-              <ion-item>
-
-                <ion-row>
-                  <ion-col size="4">
-                    <ion-label>Match #:</ion-label>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-label>Team #:</ion-label>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-label style="color:green;"> Synced</ion-label>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-icon name="sync-outline"></ion-icon>
-                  </ion-col>
-                </ion-row>
-
-              </ion-item>
-              <ion-item>
-
-                <ion-row>
-                  <ion-col size="4">
-                    <ion-label>Match #:</ion-label>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-label>Team #:</ion-label>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-label style="color:green;"> Synced</ion-label>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-icon name="sync-outline"></ion-icon>
-                  </ion-col>
-                </ion-row>
-
-              </ion-item>
-              <ion-item>
-
-                <ion-row>
-                  <ion-col size="4">
-                    <ion-label>Match #:</ion-label>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-label>Team #:</ion-label>
-                  </ion-col>
-                  <ion-col size="4">
-                    <ion-label style="color:green;"> Synced</ion-label>
-                  </ion-col>
-                  <ion-col size="2">
-                    <ion-icon name="sync-outline"></ion-icon>
-                  </ion-col>
-                </ion-row>
-
-              </ion-item>
-
+            <ion-list id="device-history-list">
             </ion-list>
           </ion-content>
 
@@ -1079,57 +1248,63 @@
 
             <ion-list inset="true">
               <ion-item>
-                <ion-range id="text-select" ticks="true" snaps="true" min="0" max="5">
+                <ion-range id="text-select" ticks="true" snaps="true" min="1" max="7">
                   <ion-icon name="text-outline" slot="start" style="transform: scale(0.81);"></ion-icon>
                   <ion-icon name="text-outline" slot="end" style="transform: scale(0.97);"></ion-icon>
                 </ion-range>
               </ion-item>
             </ion-list>
-
+            
             <ion-list inset="true">
               <ion-item>
-                <ion-toggle id="auto-sync-toggle" justify="space-between">Auto-Sync</ion-toggle>
+                <ion-toggle id="match-sync-toggle" justify="space-between" checked="true" disabled="true">Sync match schedule</ion-toggle>
+              </ion-item>
+            </ion-list>
+            <ion-list inset="true">
+              <ion-item>
+                <ion-toggle id="auto-sync-toggle" justify="space-between">Default match settings</ion-toggle>
               </ion-item>
               <ion-item>
-                <ion-select justify="space-between" label="Competition" id="competition-select" data-ref="competition"
-                  placeholder="Select competition">
-                  <ion-select-option value="training">Training</ion-select-option>
-                  <ion-select-option value="mt-olive">Mount Olive</ion-select-option>
-                  <ion-select-option value="montgomery">Montgomery</ion-select-option>
-                  <ion-select-option value="mt">Lehigh</ion-select-option>
-                  <ion-select-option value="championship">Houston</ion-select-option>
+                <ion-select justify="space-between" label="Competition" id="competition-select" data-ref="competition" placeholder="Select competition">
+                  <ion-select-option value="1">Training</ion-select-option>
+                  <ion-select-option value="2">Mount Olive</ion-select-option>
+                  <ion-select-option value="3">Montgomery</ion-select-option>
+                  <ion-select-option value="4">Lehigh</ion-select-option>
+                  <ion-select-option value="5">Houston</ion-select-option>
                 </ion-select>
               </ion-item>
               <ion-item>
-                <ion-select justify="space-between" label="Alliance" id="alliance-select" data-ref="alliance"
-                  placeholder="Select alliance">
+                <ion-select justify="space-between" label="Alliance" id="alliance-select" data-ref="alliance" placeholder="Select alliance">
                   <ion-select-option value="red">Red</ion-select-option>
                   <ion-select-option value="blue">Blue</ion-select-option>
                 </ion-select>
               </ion-item>
               <ion-item>
-                <ion-select justify="space-between" label="Position" id="position-select" data-ref="position"
-                  placeholder="Select position">
+                <ion-select justify="space-between" label="Position" id="position-select" data-ref="position" placeholder="Select position">
                   <ion-select-option value="close">Close</ion-select-option>
                   <ion-select-option value="middle">Middle</ion-select-option>
                   <ion-select-option value="far">Far</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>
-
+            
             <ion-list inset="true">
-              <ion-item button="true" onclick="logout();">
-                <ion-text color="primary" slot="start">Logout</ion-text>
-              </ion-item>
-              <ion-item button="true" id="open-modal">
-                <ion-text color="danger" slot="start">
-                  Danger zone
+              <ion-item button="true" onclick="reloadSite();">
+                <ion-text color="primary" slot="start">
+                  Refresh
                 </ion-text>
               </ion-item>
+              <ion-item button="true" id="open-modal">
+                <ion-text color="primary" slot="start">
+                  Debug info
+                </ion-text>
+              </ion-item>
+              <ion-item button="true" onclick="logout();">
+                <ion-text color="danger" slot="start">Logout</ion-text>
+              </ion-item>
             </ion-list>
-
-            <small style="margin-top: -6px; margin-left: 21px; position: relative; display: block; color: #ccc;">Last
-              auto-sync: <span id="auto-sync-datetime">unknown</span></small>
+            
+            <small style="margin-top: -6px; margin-left: 21px; position: relative; display: block; color: #ccc;">Last sync: <span id="auto-sync-datetime">unknown</span></small>
 
             <ion-modal class="danger-zone" trigger="open-modal">
               <ion-list inset="true">
@@ -1137,7 +1312,7 @@
                   <ion-text slot="start"><span id="sw-version">Loading Service Worker...</span></ion-text>
                 </ion-item>
                 <ion-item button="true">
-                  <ion-text color="primary" slot="start">Update Service Worker</ion-text>
+                  <ion-text color="primary" slot="start" onclick="updateServiceWorker();">Update Service Worker</ion-text>
                 </ion-item>
                 <ion-item button="true">
                   <ion-text color="primary" slot="start" onclick="reset();">Reset Session</ion-text>
