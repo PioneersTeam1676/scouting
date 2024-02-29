@@ -1,4 +1,22 @@
 
+/**
+ * SESSION KEYS:
+ * ---------------------
+ * session-user             - json; info for current user
+ * session-user-super       - bool; if current session is in super scout mode
+ * session-user-globals     - json; stores default match settings (competition, alliance, and position)
+ * 
+ * session-sync-auto        - bool; if globals are to be synced via our centralized system
+ * session-sync-timestamp   - int; timestamp of the last auto-sync (if applicable)
+ * 
+ * session-scout-values     - json; captures the most current state of fields on the scout tab
+ * session-scout-history    - json[]; stores a copy of the scout tab fields each time the form is reset
+ * 
+ * session-ui-tab           - string; the id of the last tab viewed (to be restored on a fresh launch)
+ * ---------------------
+ */
+
+
 /* LOCAL STORAGE HELPER FUNCTIONS */
 
 function storeData(key, value) {
@@ -12,6 +30,27 @@ function retrieveData(key) {
 
 function deleteData(key) {
   localStorage.removeItem(key);
+}
+
+
+/* TIME HELPER FUNCTION */
+
+function getTimestampInSeconds() {
+  return Math.floor(Date.now() / 1000);
+}
+
+
+/* UPDATE SERVICE WORKER */
+
+function updateServiceWorker() {
+    location.reload();
+}
+
+function reloadSite() {
+    $("#loader").fadeIn();
+    setTimeout(function() {
+        location.reload();
+    }, 500);
 }
 
 
@@ -39,7 +78,7 @@ setTimeout(function() {
 
 /* IS SUPER SCOUT? */
 
-if (retrieveData("session-super")) {
+if (retrieveData("session-user-super")) {
     $("#super-tag").css("display", "block");
 }
 
@@ -52,51 +91,62 @@ async function autoSyncNow() {
     competitionSelect.value = data.competition;
     allianceSelect.value = data.alliance;
     positionSelect.value = data.position;
-    storeData("session-globals", data);
+    storeData("session-user-globals", data);
+    
+    // TO-DO: Cleanup date handling
+    storeData("session-sync-timestamp", getTimestampInSeconds());
     let date = new Date();
-    storeData("sync-timestamp", date.getTime());
-    autoSyncDatetime.innerHTML = date.getHours() + ":" + date.getHours() + ":" + date.getSeconds();
+    autoSyncDatetime.innerHTML = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 }
 
 function setGlobalSelectorState(state) {
     competitionSelect.disabled = state;
     allianceSelect.disabled = state;
     positionSelect.disabled = state;
+    if (state) {
+        competitionSelect.parentElement.style.display = "none";
+        allianceSelect.parentElement.style.display = "none";
+        positionSelect.parentElement.style.display = "none";
+    } else {
+        competitionSelect.parentElement.style.display = "block";
+        allianceSelect.parentElement.style.display = "block";
+        positionSelect.parentElement.style.display = "block";
+    }
 }
 
 autoSyncToggle.addEventListener('ionChange', function(e) {
     if (autoSyncToggle.checked) {
         setGlobalSelectorState(true);
-        storeData("sync-auto", true);
+        storeData("session-sync-auto", true);
         autoSyncNow();
     } else {
         setGlobalSelectorState(false);
-        storeData("sync-auto", false);
+        storeData("session-sync-auto", false);
         autoSyncDatetime.innerHTML = "N/A";
     }
 });
 
 [competitionSelect, allianceSelect, positionSelect].forEach(select => {
     select.addEventListener('ionChange', function(e) {
-        let sessionGlobals = retrieveData("session-globals");
+        let sessionGlobals = retrieveData("session-user-globals");
         sessionGlobals[select.dataset.ref] = select.value;
-        storeData("session-globals", sessionGlobals);
+        storeData("session-user-globals", sessionGlobals);
     });
 });
 
-if (retrieveData("sync-auto") === null) {
-    storeData("sync-auto", true);
+if (retrieveData("session-sync-auto") === null) {
+    storeData("session-sync-auto", true);
     setGlobalSelectorState(true);
 }
 
-if (window.navigator.onLine && retrieveData("sync-auto")) {
+if (window.navigator.onLine && retrieveData("session-sync-auto")) {
     autoSyncNow();
     autoSyncToggle.checked = "true";
     setGlobalSelectorState(true);
-} else if (retrieveData("sync-auto") && retrieveData("sync-timestamp")) {
-    autoSyncDatetime.innerHTML = retrieveData("sync-timestamp");
+} else if (retrieveData("session-sync-auto") && retrieveData("session-sync-timestamp")) {
+    autoSyncDatetime.innerHTML = retrieveData("session-sync-timestamp");
 } else {
-    let sessionGlobals = retrieveData("session-globals");
+    let sessionGlobals = retrieveData("session-user-globals");
     competitionSelect.value = sessionGlobals.competition;
     allianceSelect.value = sessionGlobals.alliance;
     positionSelect.value = sessionGlobals.position;
@@ -109,17 +159,18 @@ if (window.navigator.onLine && retrieveData("sync-auto")) {
 
 tabs.addEventListener("ionTabsDidChange", function(){
     tabs.getSelected().then((response) => {
-        storeData("session-tab", response);
+        storeData("session-ui-tab", response);
     });
 });
   
-const initTab = (retrieveData('session-tab') ? retrieveData('session-tab') : 'scout');
-
-try {
-    tabs.select(initTab);
-} catch {
-    console.log("Tab session restore failed. Expected behavior for webkit browsers.");
-}
+document.addEventListener("DOMContentLoaded", function() {
+    try {
+        const initTab = retrieveData('session-ui-tab') ? retrieveData('session-ui-tab') : 'scout';
+        tabs.select(initTab);
+    } catch {
+        console.log("Tab session restore failed. Expected behavior for webkit browsers.");
+    }
+});
 
 
 /* STORE TEXT SIZE */
@@ -129,12 +180,12 @@ textRangeSelect.addEventListener("ionChange", function(){
     changeTextStyles(textRangeSelect.value);
 });
 
-const initTextSelected = retrieveData('session-text-size') ? retrieveData('session-text-size') : '2';
+const initTextSelected = retrieveData('session-text-size') ? retrieveData('session-text-size') : '4';
 textRangeSelect.value = initTextSelected;
 changeTextStyles(initTextSelected);
 
 function changeTextStyles(size) {
-    document.documentElement.style.fontSize = (11 + parseInt(size)) + 'pt';
+    document.documentElement.style.fontSize = (9 + parseInt(size)) + 'pt';
 }
 
 
@@ -145,7 +196,7 @@ function logout() {
         $("#loader").fadeIn();
         deleteData('session-user');
         deleteData('session-scout-values');
-        storeData("session-super", false);
+        storeData("session-user-super", false);
         setTimeout(function() {
             location.reload();
         }, 500);
@@ -160,11 +211,11 @@ function reset() {
 }
 
 
-/* SAVE PAGE STATE */
+/* SAVE MATCH FORM STATE */
 
 let initInputValues = retrieveData("session-scout-values");
 let inputValues = initInputValues ? initInputValues : {};
-let elements = [input1_match, input1_team, input1_team_red, input1_team_blue, input1_noshow, input1_closest, input1_middle, input1_furthest, input2_robot_left_start, input2_speaker_scored_tele, input2_speaker_missed_tele, input2_speaker_scored_auto, input2_speaker_missed_auto, input2_trap_scored, input2_trap_missed, input2_park_fell, input2_park_ignored, input2_park_solo, input2_park_chain, input2_park_buddy];
+let elements = [input1_match, input1_team, input1_team_red, input1_team_blue, input1_noshow, input1_closest, input1_middle, input1_furthest, input2_robot_left_start, input2_speaker_scored_tele, input2_speaker_missed_tele, input2_speaker_scored_auto, input2_speaker_missed_auto, input2_amp_scored_tele, input2_amp_missed_tele, input2_amp_scored_auto, input2_amp_missed_auto, input2_trap_scored, input2_trap_missed, input2_park_fell, input2_park_ignored, input2_park_solo, input2_park_chain, input2_park_buddy, input2_peg_score, input2_peg_miss, input2_cooper_yes, input2_cooper_no];
 
 // Function to update inputValues for radio buttons specifically
 function updateRadioValues(name) {
@@ -202,6 +253,11 @@ function setElementState(element) {
     }
 }
 
+function inputWasChanged(elem) {
+    updateInputValues(elem);
+    storeData("session-scout-values", inputValues);
+}
+
 // Initial population of the inputValues object and setup of event listeners
 elements.forEach(element => {
     // Set the element state based on stored values
@@ -220,16 +276,133 @@ elements.forEach(element => {
 
     // Add an event listener to each element for real-time updates
     element.addEventListener('input', () => {
-        updateInputValues(element);
-
-        // Store and log the updated JSON object to see the changes
-        storeData("session-scout-values", inputValues);
-        console.log(inputValues);
+        inputWasChanged(element);
     });
 });
 
-// Log the initial state of inputValues
-console.log(inputValues);
+function resetScoutForm() {
+    let nextScoutGlobals = retrieveData("session-user-globals");
+    let nextScoutMatchValue = (retrieveData("session-scout-values")) ? parseInt(retrieveData("session-scout-values")["input1-match"]) + 1 : 1;
+    deleteData("session-scout-values");
+    
+    input1_match.value = nextScoutMatchValue;
+    input1_team.value = null;
+    input1_team_red.checked = false;
+    input1_team_blue.checked = false;
+    input1_noshow.checked = false;
+    input1_closest.checked = false;
+    input1_middle.checked = false;
+    input1_furthest.checked = false;
+    input2_robot_left_start.checked = false;
+    input2_speaker_scored_tele.value = 0;
+    input2_speaker_missed_tele.value = 0;
+    input2_speaker_scored_auto.value = 0;
+    input2_speaker_missed_auto.value = 0;
+    input2_amp_scored_tele.value = 0;
+    input2_amp_missed_tele.value = 0;
+    input2_amp_scored_auto.value = 0;
+    input2_amp_missed_auto.value = 0;
+    input2_trap_scored.value = 0;
+    input2_trap_missed.value = 0;
+    input2_park_fell.checked = false;
+    input2_park_ignored.checked = false;
+    input2_park_solo.checked = false;
+    input2_park_chain.checked = false;
+    input2_park_buddy.checked = false;
+    input2_peg_score.checked = false;
+    input2_peg_miss.checked = false;
+    input2_cooper_yes.checked = false;
+    input2_cooper_no.checked = false;
+    
+    if (nextScoutGlobals.alliance == "blue") {
+        input1_team_blue.checked = true;
+    } else {
+        input1_team_red.checked = true;
+    }
+    if (nextScoutGlobals.position == "far") {
+        input1_furthest.checked = true;
+    } else if (nextScoutGlobals.position == "middle") {
+        input1_middle.checked = true;
+    } else {
+        input1_closest.checked = true;
+    }
+    
+    elements.forEach(element => {
+        inputWasChanged(element);
+    });
+    
+    setPage(1, pageCount);
+}
+
+if (retrieveData("session-scout-values") === null) {
+    resetScoutForm();
+}
+
+
+/* MATCH SUBMITTED; ARCHIVE MATCH FORM STATE */
+
+function matchSubmitted(insert_id, score_data) {
+    let scoutHistory = (retrieveData("session-scout-history")) ? retrieveData("session-scout-history") : [];
+    let newMatchArchive = {
+        insert_id: insert_id,
+        user_id: score_data.uid,
+        lookup_data: {
+            comp_num: score_data.comp_num,
+            match_num: score_data.match_num,
+            team_num: score_data.team_num
+        },
+        score_data: score_data,
+        created: getTimestampInSeconds(),
+        updated: null
+    }
+    newMatchArchive["form_data"] = retrieveData("session-scout-values");
+    scoutHistory.push(newMatchArchive);
+    storeData("session-scout-history", scoutHistory);
+    repaintDeviceHistory();
+    resetScoutForm();
+    presentAlert();
+}
+
+async function presentAlert() {
+    const alert = document.createElement('ion-alert');
+    alert.header = 'Match Submitted!';
+    alert.buttons = ['OK'];
+
+    document.body.appendChild(alert);
+    await alert.present();
+}
+
+
+/* REPAINT DEVICE HISTORY */
+
+function repaintDeviceHistory() {
+    let scoutHistory = (retrieveData("session-scout-history")) ? retrieveData("session-scout-history") : [];
+    
+    deviceHistoryList.innerHTML = '';
+    
+    scoutHistory.forEach((record) => {
+        const isSynced = record.insert_id && record.insert_id > 0;
+        const itemHTML = `
+          <ion-item>
+            <ion-row>
+              <ion-col>
+                <ion-label>Match: ${record.lookup_data.match_num}</ion-label>
+              </ion-col>
+              <ion-col style="width: 174px;">
+                <ion-label>Team: ${record.lookup_data.team_num}</ion-label>
+              </ion-col>
+              <ion-col>
+                <ion-label style="color:${isSynced ? 'green' : 'red'}; text-align: end;"> ${isSynced ? 'Saved' : 'Pending'}</ion-label>
+              </ion-col>
+            </ion-row>
+          </ion-item>
+        `;
+        
+        deviceHistoryList.insertAdjacentHTML('beforeend', itemHTML);
+    });
+}
+
+repaintDeviceHistory();
 
 
 /* LIVE UPDATE THE VIEW */
@@ -237,7 +410,6 @@ console.log(inputValues);
 elements.slice(0, 8).forEach(element => {
     element.addEventListener('input', () => {
         viewMatchNumber.innerHTML = input1_match.value;
-        console.log(input1_match.value);
         viewRobotNumber.innerHTML = input1_team.value;
         viewAlliance.innerHTML = input1_team_red.checked ? "RED" : (input1_team_blue.checked ? "BLUE" : "");
         viewAlliance.style.color = input1_team_red.checked ? "#dc3545" : (input1_team_blue.checked ? "#0d6efd" : "");

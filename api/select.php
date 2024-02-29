@@ -12,9 +12,15 @@ if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $data[] = $row; // Add each row into the data array
     }
-    echo json_encode($data); // Convert the data array to JSON and echo it
+    echo json_encode([
+        "response_code" => 200,
+        "select_data" => $data
+    ]);
 } else {
-    echo "0 results"; // Handle the case of no rows found
+    echo json_encode([
+        "response_code" => 200,
+        "select_data" => []
+    ]);
 }
 
 $conn->close();
