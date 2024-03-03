@@ -107,18 +107,19 @@
   <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
   <script src="./assets/js/bootstrap.bundle.min.js"></script>
   
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
+  <!--<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">-->
+  <!--<meta http-equiv="Pragma" content="no-cache">-->
+  <!--<meta http-equiv="Expires" content="0">-->
   
   <script>
       const apiEndpoint = "https://team1676.com/scout/api/";
   </script>
 
-  <!--<script type="module" src="./assets/js/ionic/ionic.esm.js"></script>-->
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+  <script type="module" src="./assets/js/ionic/ionic.esm.js"></script>
+  <!--<script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>-->
   <script nomodule src="./assets/js/ionic.js"></script>
   <link rel="stylesheet" href="./assets/css/ionic.bundle.css" />
+  <script src="./assets/js/chart.js"></script>
 
   <script src="./assets/js/jquery.min.js"></script>
   <script defer src="./assets/js/qrcode.min.js"></script>
@@ -172,7 +173,6 @@
   <script defer>window.scrollTo(0, 0);</script>
   <!--<script>window.onbeforeunload = () => { return "Are you sure you want to leave? Your progress might not be saved!"; };</script>-->
 
-  <script defer src="./field.js"></script>
   <script defer src="./script.js"></script>
   <script src="./components.js"></script>
 
@@ -180,7 +180,6 @@
   <script defer src="./storage/users.js"></script>
 
   <link rel="stylesheet" href="./style.css">
-  <link rel="stylesheet" href="./field.css">
   <link rel="stylesheet" href="./variables.css">
 </head>
 
@@ -365,6 +364,7 @@
                   </span>
                   <input id="input1-team" inputmode="numeric" pattern="\d*" class="form-control"
                     aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                    <div id="suggestions"></div>
                 </div>
 
                 <label class="form-label" for="position-radio" style="margin-bottom: 0;">
@@ -710,18 +710,20 @@
 
               <div class="page page-invisible page-3">
                 <h1>Auto Path</h1>
+                
+                <iframe src="selector.html" id="input3-auto-path-selector" style="max-height: 385px; min-height: 315px; height: 48vw; width: 100%;"></iframe>
 
-                <div id="fieldContainer">
-                  <canvas id="imageCanvas" class="flip" width="1266" height="591"></canvas>
-                </div>
+                <!--<div id="fieldContainer">-->
+                <!--  <canvas id="imageCanvas" class="flip" width="1266" height="591"></canvas>-->
+                <!--</div>-->
 
-                <div class="mb-3" id="fieldBtnContainer">
-                  <input type="radio" class="btn-check" name="fieldOptions" id="startFieldBlue" onclick="unflipField()">
-                  <label class="btn btn-secondary" for="startFieldBlue">Front View</label>
-                  <input type="radio" class="btn-check" name="fieldOptions" id="startFieldRed" onclick="flipField()">
-                  <label class="btn btn-secondary" for="startFieldRed">Reverse View</label>
-                  <span id="viewWillChange">➝ View will change when page is refreshed.</span>
-                </div>
+                <!--<div class="mb-3" id="fieldBtnContainer">-->
+                <!--  <input type="radio" class="btn-check" name="fieldOptions" id="startFieldBlue" onclick="unflipField()">-->
+                <!--  <label class="btn btn-secondary" for="startFieldBlue">Front View</label>-->
+                <!--  <input type="radio" class="btn-check" name="fieldOptions" id="startFieldRed" onclick="flipField()">-->
+                <!--  <label class="btn btn-secondary" for="startFieldRed">Reverse View</label>-->
+                <!--  <span id="viewWillChange">➝ View will change when page is refreshed.</span>-->
+                <!--</div>-->
 
                 <div class="continue-container">
                   <button id="input3-next" class="mt-1 btn btn-primary btn-large page-btn-4">Continue</button>
@@ -764,7 +766,7 @@
                             <ion-icon name="remove-outline"></ion-icon>
                           </button>
                         </span>
-                        <input type="number" class="form-control input-number" id="input4-amplified-scored" placeholder="0" aria-label="missed amp">
+                        <input type="number" class="form-control input-number" id="input4-amplified-missed" placeholder="0" aria-label="missed amp">
                         <span class="input-group-btn">
                           <button type="button" class="quantity-right-plus btn btn-success btn-number" style="padding-top: 14px;" data-type="plus" data-field="">
                             <ion-icon name="add-outline"></ion-icon>
@@ -830,16 +832,13 @@
                 </label>
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-                  <input id="input4-score-nopref" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="3"
-                    checked>
+                  <input id="input4-score-nopref" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="3">
                   <label class="btn btn-outline-primary" for="input4-score-nopref">No Pref</label>
 
-                  <input id="input4-score-amp" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="1"
-                    checked>
+                  <input id="input4-score-amp" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="1">
                   <label class="btn btn-outline-primary" for="input4-score-amp">Amp</label>
 
-                  <input id="input4-score-speaker" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="2"
-                    checked>
+                  <input id="input4-score-speaker" type="radio" class="btn-check" name="score-pref" autocomplete="off" value="2">
                   <label class="btn btn-outline-primary" for="input4-score-speaker">Speaker</label>
                 </div>
 
@@ -957,16 +956,16 @@
                 </label>
 
                 <div class="btn-group btn-group-sm" role="group" aria-label="Basic radio toggle button group">
-                  <input id="input4-broken-no" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="0" checked>
+                  <input id="input4-broken-no" type="radio" class="btn-check" name="broken-select" autocomplete="off" value="0" checked>
                   <label class="btn btn-outline-primary" for="input4-broken-no">N/A</label>
 
-                  <input id="input4-broken-comms" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="1">
+                  <input id="input4-broken-comms" type="radio" class="btn-check" name="broken-select" autocomplete="off" value="1">
                   <label class="btn btn-outline-primary" for="input4-broken-comms">Lost Comms</label>
 
-                  <input id="input4-broken-mechanical" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="2">
+                  <input id="input4-broken-mechanical" type="radio" class="btn-check" name="broken-select" autocomplete="off" value="2">
                   <label class="btn btn-outline-primary" for="input4-broken-mechanical">Mech Err</label>
                   
-                  <input id="input4-broken-estop" type="radio" class="btn-check" name="broken-pref" autocomplete="off" value="3">
+                  <input id="input4-broken-estop" type="radio" class="btn-check" name="broken-select" autocomplete="off" value="3">
                   <label class="btn btn-outline-primary" for="input4-broken-estop">E-Stop</label>
                 </div>
                 
@@ -1010,67 +1009,163 @@
           </ion-content>
           <!-- Container for dynamically inserted pages -->
           <ion-content id="page-container" style="--background: #313131; text-align: center;">
-            <small style="margin-top: 60px; font-size: 12pt;">^ select a match above to see details</small>
+            <small style="margin-top: 60px; font-size: 12pt;">
+                <b>INFO-TECH:</b>
+                <br/>
+                ^ select a match above to see raw data
+                <br/><br/>
+                <b>ALUMNI & MENTORS:</b>
+                <br/>
+                <button class="btn btn-success" onclick="window.location.href = 'https://docs.google.com/spreadsheets/d/1elAy2mw2F2X9VgSGXyL6myntqa28TYvU7LqQJTZbNcM/edit#gid=1893279482';">
+                    Google Sheet ›
+                </button>
+            </small>
           </ion-content>
 
           <script>
-          
-            let scout_data;
-            
-            function fetchScoutData() {
-                try {
-                    $.ajax({
-                        url: apiEndpoint + "select.php",
-                        type: "GET",
-                        contentType: "application/json",
-                        success: function(response, status){
-                            if (JSON.parse(response).response_code == 200) {
-                                scout_data = JSON.parse(response).select_data;
-                                generateItemsAndButtons();
-                            } else {
-                                alert(response + "\nStatus: " + status);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            // alert(error + "\nStatus: " + status);
-                        }
-                    });
-                } catch {
-                    console.log("offline - can't fetch server data");
-                }
-            }
-            
-            fetchScoutData();
-          
-            setInterval(function() {
-                fetchScoutData();
-            }, 10000);
+            /* AYAN'S DATA UI CODE */
           
             // Function to generate items and buttons
             function generateItemsAndButtons() {
-              const itemList = document.getElementById('item-list');
-              itemList.innerHTML = "";
-              scout_data.forEach(function(match) {
-                const i = match.match_num;
-                const item = document.createElement('ion-item');
-                const button = document.createElement('ion-button');
-                button.textContent = `Match ${i}`; // Button text "Match i"
-                button.id = `button-${i}`; // Assign ID to the button
-                button.onclick = () => navigateToPage(i, match);
-                // Generate 6 random numbers
-                const numbers = [match.team_num];
-                // Store the numbers as a data attribute on the button
-                button.dataset.numbers = numbers.join(',');
-                button.classList.add("open-match-btn");
-                // Display the numbers as text next to the button
-                const numbersText = document.createElement('span');
-                numbersText.textContent = numbers.join(', ');
-                numbersText.style.marginLeft = '10px'; // Add some spacing
-                numbersText.style.fontSize = "16px";
-                item.appendChild(button);
-                item.appendChild(numbersText);
-                itemList.appendChild(item);
+                const itemList = document.getElementById('item-list');
+                itemList.innerHTML = "";
+            
+                // Aggregate data by match number
+                const matches = {};
+                scout_data.forEach(function(entry) {
+                    const matchNum = entry.match_num;
+                    if (!matches[matchNum]) {
+                        matches[matchNum] = {
+                            match_num: matchNum,
+                            teams: new Set(),
+                            data: []
+                        };
+                    }
+                    matches[matchNum].teams.add(entry.team_num);
+                    matches[matchNum].data.push(entry);
+                });
+            
+                // Create UI elements for each match
+                Object.values(matches).forEach(function(match) {
+                    const item = document.createElement('ion-item');
+                    const button = document.createElement('ion-button');
+                    button.textContent = `Match ${match.match_num}`; 
+                    button.id = `button-${match.match_num}`; 
+                    button.onclick = () => navigateToPage(match.match_num, match.data); 
+                    button.dataset.numbers = Array.from(match.teams).join(',');
+                    button.classList.add("open-match-btn");
+                    
+                    const teamsText = document.createElement('span');
+                    teamsText.textContent = `${Array.from(match.teams).join(', ')}`;
+                    teamsText.style.marginLeft = '10px';
+                    teamsText.style.fontSize = "16px";
+            
+                    item.appendChild(button);
+                    item.appendChild(teamsText);
+                    itemList.appendChild(item);
+                });
+            }
+            
+            // function generateItemsAndButtons() {
+            //   const itemList = document.getElementById('item-list');
+            //   itemList.innerHTML = ""; // Clear current items
+            
+            //   // Group data by team number
+            //   const teamsData = scout_data.reduce((acc, match) => {
+            //     (acc[match.team_num] = acc[match.team_num] || []).push(match);
+            //     return acc;
+            //   }, {});
+            
+            //   Object.keys(teamsData).forEach(teamNum => {
+            //     const matches = teamsData[teamNum];
+                
+            //     const item = document.createElement('ion-item');
+            //     const button = document.createElement('ion-button');
+            //     button.textContent = `Team ${teamNum}`; // Button text "Team number"
+            //     button.id = `team-button-${teamNum}`; // Assign ID to the button
+            //     // Use first match data as representative for navigation; adjust as needed
+            //     button.onclick = () => navigateToPage(teamNum, matches[0]);
+            //     button.classList.add("open-team-btn");
+                
+            //     // Display matches as text or list next to the button
+            //     const matchesText = document.createElement('span');
+            //     matchesText.textContent = `Matches: ${matches.map(m => m.match_num).join(', ')}`;
+            //     matchesText.style.marginLeft = '10px'; // Add some spacing
+            //     matchesText.style.fontSize = "16px";
+            
+            //     item.appendChild(button);
+            //     item.appendChild(matchesText);
+            //     itemList.appendChild(item);
+            //   });
+            // }
+            
+            // Function to filter buttons based on entered numbers
+            function filterButtonsByNumbers(numbers, mode) {
+              // Define selectors based on mode
+              let selector;
+              if (mode === 'team') {
+                selector = 'ion-button.open-team-btn';
+              } else if (mode === 'match') {
+                selector = 'ion-button.open-match-btn'; // Ensure this class exists for match buttons
+              }
+            
+              const buttons = document.querySelectorAll(selector);
+              let foundResults = false;
+            
+              if (numbers === '') {
+                // Display all buttons if search bar is empty
+                displayAllButtons(buttons);
+                return;
+              }
+            
+              // Validate numbers input using regex
+              const validCharactersRegex = /^[0-9, ]*$/;
+              if (!validCharactersRegex.test(numbers)) {
+                console.log('Invalid characters detected.');
+                return;
+              }
+            
+              // Process input numbers
+              const searchNumbers = numbers.replace(/,/g, ' ').split(' ').filter(num => num !== '').map(num => parseInt(num));
+              
+              // Filter buttons based on mode
+              if (mode === 'team') {
+                filterByTeamNumber(buttons, searchNumbers);
+              } else if (mode === 'match') {
+                filterByMatchNumber(buttons, searchNumbers);
+              }
+            }
+            
+            function displayAllButtons(buttons) {
+              buttons.forEach(button => {
+                button.closest('ion-item').style.display = 'block';
               });
+              document.getElementById('no-results').style.display = 'none';
+            }
+            
+            function filterByTeamNumber(buttons, searchNumbers) {
+              filterAndDisplayResults(buttons, searchNumbers, 'team');
+            }
+            
+            function filterByMatchNumber(buttons, searchNumbers) {
+              filterAndDisplayResults(buttons, searchNumbers, 'match');
+            }
+            
+            function filterAndDisplayResults(buttons, searchNumbers, mode) {
+              let foundResults = false;
+              buttons.forEach(button => {
+                const dataNumbers = button.dataset.numbers.split(',').map(num => parseInt(num));
+                const isMatch = mode === 'match' ? searchNumbers.some(num => dataNumbers.includes(num)) : searchNumbers.every(num => dataNumbers.includes(num));
+                if (isMatch) {
+                  button.closest('ion-item').style.display = 'block';
+                  foundResults = true;
+                } else {
+                  button.closest('ion-item').style.display = 'none';
+                }
+              });
+            
+              // Display or hide the "No results found" message
+              document.getElementById('no-results').style.display = foundResults ? 'none' : 'block';
             }
             
             // Function to navigate to a specific page
@@ -1145,6 +1240,7 @@
               const noResultsMessage = document.getElementById('no-results');
               noResultsMessage.style.display = foundResults ? 'none' : 'block';
             }
+
             // Listen for changes in the search mode
             const searchMode = document.getElementById('search-mode');
             searchMode.addEventListener('ionChange', (event) => {
@@ -1152,12 +1248,17 @@
               const searchBar = document.getElementById('search-bar');
               if (mode === 'team') {
                 searchBar.placeholder = 'Search by Team Number';
+                searchBar.disabled = false; // Ensure search bar is enabled
               } else if (mode === 'match') {
                 searchBar.placeholder = 'Search by Match Number';
+                searchBar.disabled = false; // Ensure search bar is enabled
               }
+              // Reset search bar value on tab change to avoid confusion
+              searchBar.value = '';
               const numbersToLookup = searchBar.value.trim();
               filterButtonsByNumbers(numbersToLookup, mode);
             });
+
             // Listen for changes in the search bar
             const searchBar = document.getElementById('search-bar');
             searchBar.addEventListener('input', (event) => {
@@ -1177,6 +1278,9 @@
               /* Change text color */
               cursor: not-allowed;
               /* Change cursor to not-allowed */
+            }
+            .open-match-btn {
+                min-width: 75px;
             }
           </style>
 
@@ -1275,15 +1379,15 @@
               </ion-item>
               <ion-item>
                 <ion-select justify="space-between" label="Alliance" id="alliance-select" data-ref="alliance" placeholder="Select alliance">
-                  <ion-select-option value="red">Red</ion-select-option>
-                  <ion-select-option value="blue">Blue</ion-select-option>
+                  <ion-select-option value="2">Red</ion-select-option>
+                  <ion-select-option value="1">Blue</ion-select-option>
                 </ion-select>
               </ion-item>
               <ion-item>
                 <ion-select justify="space-between" label="Position" id="position-select" data-ref="position" placeholder="Select position">
-                  <ion-select-option value="close">Close</ion-select-option>
-                  <ion-select-option value="middle">Middle</ion-select-option>
-                  <ion-select-option value="far">Far</ion-select-option>
+                  <ion-select-option value="3">Close</ion-select-option>
+                  <ion-select-option value="2">Middle</ion-select-option>
+                  <ion-select-option value="1">Far</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-list>

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Scout 24' Admin Portal</title>
+		<link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+		<script src="./assets/js/jquery.min.js"></script>
+		<script src="./storage/users.js"></script>
+		<script>
+            const apiEndpoint = "https://team1676.com/scout/api/";
+        </script>
+        <style>
+		    html, body {
+		        background: url("./assets/img/bg.jpg") #000;
+		    }
+		
+		    .accordion {
+		        --bs-accordion-active-bg: #21252910;
+		        box-shadow: 1px 1px 2px 0px #00000019;
+		        border-radius: 8px;
+		    }
+		    
+		    .accordion-button {
+		        font-weight: 500;
+		    }
+		    
+		    .accordion-button:not(.collapsed) {
+		        color: #000;
+		    }
+		
+		    #main-nav {
+		        background: #fff;
+		        padding: 10px;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+                box-shadow: 1px 1px 2px 0px #00000029;
+		    }
+		    
+		    #main-nav-content {
+		        background: #fff;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+                box-shadow: 1px 1px 2px 0px #00000029;
+		    }
+		    
+		    .card-header {
+		        padding: 12px 17px;
+		    }
+		    
+		    .table>:not(caption)>*>*.team-cell {
+		        color: red;
+		    }
+		
+		    /* LITERALLY ALL FOR THE FULL SCREEN LOADER */
+		    /* https://codepen.io/tbrownvisuals/pen/edGYvx */
+		
+		    /* Absolute Center Spinner */
+            .loading {
+                display: none;
+              position: fixed;
+              z-index: 999;
+              height: 2em;
+              width: 2em;
+              overflow: show;
+              margin: auto;
+              top: 0;
+              left: 0;
+              bottom: 0;
+              right: 0;
+            }
+            
+            /* Transparent Overlay */
+            .loading:before {
+              content: '';
+              display: block;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+                background: radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0, .8));
+            
+              background: -webkit-radial-gradient(rgba(20, 20, 20,.8), rgba(0, 0, 0,.8));
+            }
+            
+            /* :not(:required) hides these rules from IE9 and below */
+            .loading:not(:required) {
+              /* hide "loading..." text */
+              font: 0/0 a;
+              color: transparent;
+              text-shadow: none;
+              background-color: transparent;
+              border: 0;
+            }
+            
+            .loading:not(:required):after {
+              content: '';
+              display: block;
+              font-size: 10px;
+              width: 1em;
+              height: 1em;
+              margin-top: -0.5em;
+              -webkit-animation: spinner 850ms infinite linear;
+              -moz-animation: spinner 850ms infinite linear;
+              -ms-animation: spinner 850ms infinite linear;
+              -o-animation: spinner 850ms infinite linear;
+              animation: spinner 850ms infinite linear;
+              border-radius: 0.5em;
+              -webkit-box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+            box-shadow: rgba(255,255,255, 0.75) 1.5em 0 0 0, rgba(255,255,255, 0.75) 1.1em 1.1em 0 0, rgba(255,255,255, 0.75) 0 1.5em 0 0, rgba(255,255,255, 0.75) -1.1em 1.1em 0 0, rgba(255,255,255, 0.75) -1.5em 0 0 0, rgba(255,255,255, 0.75) -1.1em -1.1em 0 0, rgba(255,255,255, 0.75) 0 -1.5em 0 0, rgba(255,255,255, 0.75) 1.1em -1.1em 0 0;
+            }
+            
+            /* Animation */
+            
+            @-webkit-keyframes spinner {
+              0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+            @-moz-keyframes spinner {
+              0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+            @-o-keyframes spinner {
+              0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+            @keyframes spinner {
+              0% {
+                -webkit-transform: rotate(0deg);
+                -moz-transform: rotate(0deg);
+                -ms-transform: rotate(0deg);
+                -o-transform: rotate(0deg);
+                transform: rotate(0deg);
+              }
+              100% {
+                -webkit-transform: rotate(360deg);
+                -moz-transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -o-transform: rotate(360deg);
+                transform: rotate(360deg);
+              }
+            }
+		</style>
+	</head>
+	<body class="container pt-4">
+	    
+	    <div class="loading">Loading&#8230;</div>
+	    
+	    <div class="content">
+	    
+	        <div class="card text-center" style="border-radius: 9px;">
+                <div class="card-body" style="padding: 7px 7px 9px 7px;">
+                    <img src="./assets/img/sunburst-pi.png" width="30px" class="mb-1">
+            		<h2 style="font-weight: 800; font-size: 20px; margin-bottom: 1px !important;">Scout 24' Admin Portal</h2>
+            		<h6 class="mb-0" style="font-style: italic; font-size: 15px;">FRC Team 1676</h6>
+            	</div>
+            </div>
+    		
+    		<div class="py-3">
+    			<div class="nav nav-pills justify-content-center mb-3" id="main-nav" role="tablist">
+    				<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabs-1" type="button" role="tab" aria-controls="tabs-1" aria-selected="true">Scout Manager </button>
+    				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-2" type="button" role="tab" aria-controls="tabs-2" aria-selected="false">Master Schedules </button>
+    				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-3" type="button" role="tab" aria-controls="tabs-3" aria-selected="false">Import/Export </button>
+    			</div>
+    			
+    			<div class="alert alert-danger" role="alert" style="display: none;" id="doubleScoutAlert">
+                  <b>ERROR:</b>&ensp;It looks like the same team is being scouted twice.
+                </div>
+                
+                <div class="alert alert-warning" role="alert" style="display: none;" id="matchSyncAlert1">
+                  <b>WARNING:</b>&ensp;Match numbers are out of sync. If you are between matches, this can be ignored.
+                </div>
+                
+                <div class="alert alert-danger" role="alert" style="display: none;" id="matchSyncAlert2">
+                  <b>ERROR:</b>&ensp;Match numbers are out of sync.
+                </div>
+    			
+    			<div class="tab-content card" id="main-nav-content">
+    				<div class="tab-pane fade show active" id="tabs-1" role="tabpanel" aria-labelledby="tabs-1">
+    				    
+    				    <h5 class="card-header">Scout Manager</h5>
+
+                        <div class="card-body">
+
+        				    <div class="nav nav-tabs mb-4" role="tablist">
+                				<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabs-users-1" type="button" role="tab" aria-controls="tabs-users-1" aria-selected="true">Scouts </button>
+                				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-users-2" type="button" role="tab" aria-controls="tabs-users-2" aria-selected="false">Super Scouts </button>
+                				<!--<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-users-3" type="button" role="tab" aria-controls="tabs-users-3" aria-selected="false">Other </button>-->
+                			</div>
+        				    
+        				    <div class="tab-content">
+        				        <div class="tab-pane fade show active" id="tabs-users-1" role="tabpanel" aria-labelledby="tabs-users-1">
+        				            
+                					<div class="accordion" id="accordionActiveScouts">
+                						<div class="accordion-item">
+                							<h2 class="accordion-header">
+                								<button class="accordion-button px-3" type="button" data-bs-toggle="collapse" data-bs-target="#flush-accordionActiveScouts" aria-expanded="true" aria-controls="flush-accordionActiveScouts">
+                									<!--<h5 class="fw-bold">-->Active Users<!--</h5>-->
+                								</button>
+                							</h2>
+                							<div id="flush-accordionActiveScouts" class="accordion-collapse collapse show" data-bs-parent="#accordionActiveScouts">
+                								<div class="accordion-body">
+                
+                									<table class="table">
+                										<thead>
+                											<tr>
+                												<th scope="col">uid</th>
+                												<th scope="col">Name</th>
+                												<th scope="col">Defaults</th>
+                												<th scope="col">Form State</th>
+                											</tr>
+                										</thead>
+                										<tbody id="activeScouts"></tbody>
+                									</table>
+                
+                								</div>
+                							</div>
+                						</div>
+                					</div>
+                
+                					<div class="accordion mt-3" id="accordionInactiveScouts">
+                						<div class="accordion-item">
+                							<h2 class="accordion-header">
+                								<button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#flush-accordionInactiveScouts" aria-expanded="false" aria-controls="flush-accordionInactiveScouts">
+                									<!--<h5 class="fw-bold">-->Inactive Users<!--</h5>-->
+                								</button>
+                							</h2>
+                							<div id="flush-accordionInactiveScouts" class="accordion-collapse collapse" data-bs-parent="#accordionInactiveScouts">
+                								<div class="accordion-body">
+                
+                									<table class="table">
+                										<thead>
+                											<tr>
+                												<th scope="col">uid</th>
+                												<th scope="col">Name</th>
+                												<th scope="col">Defaults</th>
+                												<th scope="col">Form State</th>
+                											</tr>
+                										</thead>
+                										<tbody id="inactiveScouts"></tbody>
+                									</table>
+                
+                								</div>
+                							</div>
+                						</div>
+                					</div>
+                
+                				</div>
+                				<div class="tab-pane fade" id="tabs-users-2" role="tabpanel" aria-labelledby="tabs-users-2">
+                					
+                					<div class="accordion" id="accordionActiveSuperScouts">
+                						<div class="accordion-item">
+                							<h2 class="accordion-header">
+                								<button class="accordion-button px-3" type="button" data-bs-toggle="collapse" data-bs-target="#flush-accordionActiveSuperScouts" aria-expanded="true" aria-controls="flush-accordionActiveSuperScouts">
+                									<!--<h5 class="fw-bold">-->Active Users<!--</h5>-->
+                								</button>
+                							</h2>
+                							<div id="flush-accordionActiveSuperScouts" class="accordion-collapse collapse show" data-bs-parent="#accordionActiveSuperScouts">
+                								<div class="accordion-body">
+                
+                									<table class="table">
+                										<thead>
+                											<tr>
+                												<th scope="col">uid</th>
+                												<th scope="col">Name</th>
+                												<th scope="col">Defaults</th>
+                												<th scope="col">Form State</th>
+                											</tr>
+                										</thead>
+                										<tbody id="activeSuperScouts"></tbody>
+                									</table>
+                
+                								</div>
+                							</div>
+                						</div>
+                					</div>
+                
+                					<div class="accordion mt-3" id="accordionInactiveSuperScouts">
+                						<div class="accordion-item">
+                							<h2 class="accordion-header">
+                								<button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#flush-accordionInactiveSuperScouts" aria-expanded="false" aria-controls="flush-accordionInactiveSuperScouts">
+                									<!--<h5 class="fw-bold">-->Inactive Users<!--</h5>-->
+                								</button>
+                							</h2>
+                							<div id="flush-accordionInactiveSuperScouts" class="accordion-collapse collapse" data-bs-parent="#accordionInactiveSuperScouts">
+                								<div class="accordion-body">
+                
+                									<table class="table">
+                										<thead>
+                											<tr>
+                												<th scope="col">uid</th>
+                												<th scope="col">Name</th>
+                												<th scope="col">Defaults</th>
+                												<th scope="col">Form State</th>
+                											</tr>
+                										</thead>
+                										<tbody id="inactiveSuperScouts"></tbody>
+                									</table>
+                
+                								</div>
+                							</div>
+                						</div>
+                					</div>
+                					
+                					<div class="tab-pane fade" id="tabs-users-3" role="tabpanel" aria-labelledby="tabs-users-3">
+        				    
+        				
+        				            </div>
+        					
+                				</div>
+                			</div>
+                			
+                			<p class="mt-4 ps-1 mb-1" style="color: #666; font-style: italic; font-size: 13px;">Scout data syncing may be delayed up to 10 seconds.</p>
+            			
+            			</div>
+    
+    				</div>
+    				<div class="tab-pane fade" id="tabs-2" role="tabpanel" aria-labelledby="tabs-2">
+    				    
+    				    <h5 class="card-header">Master Schedules</h5>
+
+                        <div class="card-body">
+            
+                            <h5 style="font-size: 1.05rem;">Event Itineraries:</h5>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                              <button type="button" class="btn btn-primary" onclick="window.location.href='https://www.firstinspires.org/sites/default/files/uploads/frc/2024-events/2024_NJFLA_Agenda.pdf';">Mt. Olive</button>
+                              <button type="button" class="btn btn-primary" onclick="window.location.href='https://www.firstinspires.org/sites/default/files/uploads/frc/2024-events/2024_NJSKI_Agenda.pdf';">Monty</button>
+                              <button type="button" class="btn btn-primary" onclick="window.location.href='https://www.firstinspires.org/sites/default/files/uploads/frc/2024-events/2024_MRCMP_Agenda.pdf';">Lehigh</button>
+                            </div>
+                            
+                            <hr/>
+                            
+                            <h5 style="font-size: 1.05rem;">Match Data:</h5>
+                            
+                            <div class="nav nav-tabs mb-4" role="tablist">
+                				<button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabs-matches-1" type="button" role="tab" aria-controls="tabs-matches-1" aria-selected="true">Scouts </button>
+                				<button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabs-matches-2" type="button" role="tab" aria-controls="tabs-matches-2" aria-selected="false">Super Scouts </button>
+                			</div>
+        				    
+        				    <div class="tab-content">
+        				        <div class="tab-pane fade show active" id="tabs-matches-1" role="tabpanel" aria-labelledby="tabs-matches-1">
+        				            
+                                    <table class="table" id="matchesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>R1</th>
+                                                <th>R2</th>
+                                                <th>R3</th>
+                                                <th>B1</th>
+                                                <th>B2</th>
+                                                <th>B3</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Data will be loaded here -->
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                            </div>
+                            <div class="tab-content">
+        				        <div class="tab-pane fade" id="tabs-matches-2" role="tabpanel" aria-labelledby="tabs-matches-2">
+        				            
+        				            <table class="table" id="superMatchesTable">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>R1</th>
+                                                <th>R2</th>
+                                                <th>R3</th>
+                                                <th>B1</th>
+                                                <th>B2</th>
+                                                <th>B3</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- Data will be loaded here -->
+                                        </tbody>
+                                    </table>
+        				            
+        				        </div>
+                            </div>
+                        </div>
+    				
+    				</div>
+    				<div class="tab-pane fade" id="tabs-3" role="tabpanel" aria-labelledby="tabs-3">
+    				
+    				    <h5 class="card-header">Import/Export</h5>
+
+                        <div class="card-body">
+                            
+                            <form action="./api/admin_upload_matches.php" method="post" enctype="multipart/form-data">
+                                Import CSV file for Mt. Olive matches.<br />
+                                <small>Required column format:&ensp;match_num, r1, r2, r3, b1, b2, b3</small>
+                                <input type="file" class="mt-1" name="fileToUpload" id="fileToUpload"><br />
+                                <input type="submit" value="Upload CSV" class="btn btn-primary mt-1" name="submit">
+                            </form>
+                            
+                            <hr />
+                            Export scout data.<br />
+                            <a class="btn btn-primary mt-1" href="./api/admin_export_csv.php" target="_blank">Download CSV</a>
+                            <a class="btn btn-primary mt-1" href="./api/admin_export_clipboard.php" target="_blank">Copy Data</a>
+                            <!--<button class="btn btn-primary mt-1" disabled>Google Sheet Connect</button>-->
+                            
+                            <hr />
+                            Export super scout data.<br />
+                            <a class="btn btn-primary mt-1" href="./api/admin_export_csv.php?super=1" target="_blank">Download CSV</a>
+                            <a class="btn btn-primary mt-1" href="./api/admin_export_clipboard.php?super=1" target="_blank">Copy Data</a>
+                            <!--<button class="btn btn-primary mt-1" disabled>Google Sheet Connect</button>-->
+                            
+                            <br/><br/>
+                            
+                            <div class="alert alert-info" role="alert">
+                              Data is auto-synced with Google Sheets. Just refresh the workbook or make an edit to fetch data.
+                            </div>
+                            
+                        </div>
+    				
+    				</div>
+    			</div>
+    		</div>
+    		
+    	</div>
+    	
+    	<!--<div class="modal fade" id="scoutSendMessage" tabindex="-1" aria-hidden="true">-->
+     <!--     <div class="modal-dialog">-->
+     <!--       <div class="modal-content">-->
+     <!--         <div class="modal-header">-->
+     <!--           <h1 class="modal-title fs-5">New message</h1>-->
+     <!--           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+     <!--         </div>-->
+     <!--         <div class="modal-body">-->
+     <!--           <form>-->
+     <!--             <div class="mb-3">-->
+     <!--               <label for="recipient-name" class="col-form-label">User ID:</label>-->
+     <!--               <input type="text" class="form-control" name="uid" disabled>-->
+     <!--             </div>-->
+     <!--             <div class="mb-3">-->
+     <!--               <label for="message-text" class="col-form-label">Message:</label>-->
+     <!--               <textarea class="form-control" id="message-text"></textarea>-->
+     <!--             </div>-->
+     <!--           </form>-->
+     <!--         </div>-->
+     <!--         <div class="modal-footer">-->
+     <!--           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+     <!--           <button type="button" class="btn btn-primary">Send message</button>-->
+     <!--         </div>-->
+     <!--       </div>-->
+     <!--     </div>-->
+     <!--   </div>-->
+    	
+    	<div class="modal fade" id="scoutEditDefaults" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit defaults</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body py-0">
+                <form>
+                  <div class="mb-3">
+                    <input type="hidden" class="form-control" name="defaultFormUID" id="defaultFormUID" disabled>
+                  </div>
+                  <div class="mb-3">
+                    <label for="defaultAlliance" class="col-form-label">Default Alliance:</label>
+                    <select name="defaultAlliance" id="defaultAlliance">
+                      <option value="1">Blue</option>
+                      <option value="2">Red</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="defaultPosition" class="col-form-label">Default Position:</label>
+                    <select name="defaultPosition" id="defaultPosition">
+                      <option value="3">Closest</option>
+                      <option value="2">Middle</option>
+                      <option value="1">Furthest</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveDefaults()">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal fade" id="scoutEditCurrent" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit current form state</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body py-0">
+                <form>
+                  <div class="mb-3">
+                    <input type="hidden" class="form-control" name="currentFormUID" id="currentFormUID" disabled>
+                  </div>
+                  <div class="mb-3">
+                    <label for="currentMatch" class="col-form-label">Current Match:</label>
+                    <input type="text" class="form-control" name="currentMatch" id="currentMatch">
+                  </div>
+                  <div class="mb-3">
+                    <label for="currentTeam" class="col-form-label">Current Team:</label>
+                    <input type="text" class="form-control" name="currentTeam" id="currentTeam">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="saveCurrent()">Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+		<script>
+		    var matchesBeingScouted = [];
+		
+			document.addEventListener("DOMContentLoaded", function() {
+			    setInterval(fetchAndUpdateScouts, 5000); // Fetch data every 5 seconds
+			});
+
+			function fetchAndUpdateScouts() {
+			    fetchMatchData();
+			    fetch('./api/admin_spy.php')
+			    .then(response => response.json())
+			    .then(data => {
+			        updateScouts(data);
+			        $(".loading").fadeOut();
+			    })
+			    .catch(error => console.error('Error fetching scouts:', error));
+			}
+
+			function updateScouts(scouts) {
+			    const currentTime = Math.floor(Date.now() / 1000);
+			    matchesBeingScouted = [];
+			    let bundledMatchNumbers = [];
+			    scouts.forEach(scout => {
+			        let user = users.find(obj => obj.uid == scout.uid);
+			        let default_alliance = (scout.default_alliance == 1) ? "Blue" : ((scout.default_alliance == 2) ? "Red" : "");
+			        let default_position = (scout.default_position == 1) ? "Far" : ((scout.default_position == 2) ? "Mid" : ((scout.default_position == 3) ? "Close" : ""));
+			        let current_match = (scout.current_match != null) ? ("m" + scout.current_match) : "";
+			        let current_team = (scout.current_team != null) ? (scout.current_team) : "";
+			        const scoutRow = `<tr id="scout-${scout.uid}">
+			                            <th scope="row">${scout.uid}</th>
+			                            <td>${user.name}</td>
+			                            <td>
+			                                ${default_alliance} ${default_position}
+			                                <a href="#" id="scout-edit-defaults-${scout.uid}" data-bs-toggle="modal" data-bs-target="#scoutEditDefaults" data-bs-uid="${scout.uid}" data-bs-name="${user.name}" data-bs-defaultAlliance="${scout.default_position}" data-bs-defaultPosition="${scout.default_alliance}">[e]</a>
+			                            </td>
+			                            <td>
+			                                ${current_match}-${current_team}
+			                                <a href="#" id="scout-edit-current-${scout.uid}" data-bs-toggle="modal" data-bs-target="#scoutEditCurrent" data-bs-uid="${scout.uid}" data-bs-name="${user.name}"  data-bs-currentMatch="${scout.current_match}" data-bs-currentTeam="${scout.current_team}">[e]</a>
+			                            </td>
+			                          </tr>`;
+			        document.getElementById('activeScouts').querySelector(`#scout-${scout.uid}`)?.remove();
+			        document.getElementById('inactiveScouts').querySelector(`#scout-${scout.uid}`)?.remove();
+			        document.getElementById('activeSuperScouts').querySelector(`#scout-${scout.uid}`)?.remove();
+			        document.getElementById('inactiveSuperScouts').querySelector(`#scout-${scout.uid}`)?.remove();
+			        if (currentTime - scout.last_seen <= 10) {
+			            bundledMatchNumbers.push(scout.current_match);
+			            if (scout.super == 1) {
+			                document.getElementById('activeSuperScouts').innerHTML += scoutRow;
+			                matchesBeingScouted.push("ss-" + scout.current_match + "-" + scout.current_team);
+			            } else {
+			                document.getElementById('activeScouts').innerHTML += scoutRow;
+			                matchesBeingScouted.push(scout.current_match + "-" + scout.current_team);
+			            }
+			        } else {
+			            if (scout.super == 1) {
+			                document.getElementById('inactiveSuperScouts').innerHTML += scoutRow;
+			            } else {
+			                document.getElementById('inactiveScouts').innerHTML += scoutRow;
+			            }
+			        }
+			    });
+			    
+			    let tracker = {};
+			    let doubleAlertFadeOut = true;
+                for (const value of matchesBeingScouted) {
+                  if (tracker[value]) {
+                    $("#doubleScoutAlert").fadeIn();
+                    doubleAlertFadeOut = false;
+                    break;
+                  }
+                  tracker[value] = true;
+                }
+                
+                if (doubleAlertFadeOut) {
+                    $("#doubleScoutAlert").fadeOut();
+                }
+                
+                const minVal = Math.min(...bundledMatchNumbers);
+                const maxVal = Math.max(...bundledMatchNumbers);
+                const range = maxVal - minVal;
+            
+                if (range === 1) {
+                    $("#matchSyncAlert1").fadeIn();
+                    $("#matchSyncAlert2").fadeOut();
+                } else if (range > 1) {
+                    $("#matchSyncAlert1").fadeOut();
+                    $("#matchSyncAlert2").fadeIn();
+                } else {
+                    $("#matchSyncAlert1").fadeOut();
+                    $("#matchSyncAlert2").fadeOut();
+                }
+			}
+			
+			const scoutEditDefaults = document.getElementById('scoutEditDefaults');
+            if (scoutEditDefaults) {
+              scoutEditDefaults.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget;
+                const uid = button.getAttribute('data-bs-uid');
+                const name = button.getAttribute('data-bs-name');
+                const defaultAlliance = button.getAttribute('data-bs-defaultAlliance');
+                const defaultPosition = button.getAttribute('data-bs-defaultPosition');
+                const modalTitle = scoutEditDefaults.querySelector('.modal-title');
+                const modalBodyInputUID = scoutEditDefaults.querySelector('.modal-body input#defaultFormUID');
+                const modalBodySelectDefaultAlliance = scoutEditDefaults.querySelector('.modal-body select#defaultAlliance');
+                const modalBodySelectDefaultPosition = scoutEditDefaults.querySelector('.modal-body select#defaultPosition');
+                modalTitle.textContent = `Edit defaults for ${name}`;
+                modalBodyInputUID.value = uid;
+                modalBodySelectDefaultAlliance.value = defaultAlliance;
+                modalBodySelectDefaultPosition.value = defaultPosition;
+              })
+            }
+            
+            const scoutEditCurrent = document.getElementById('scoutEditCurrent');
+            if (scoutEditCurrent) {
+              scoutEditCurrent.addEventListener('show.bs.modal', event => {
+                const button = event.relatedTarget;
+                const uid = button.getAttribute('data-bs-uid');
+                const name = button.getAttribute('data-bs-name');
+                const currentMatch = button.getAttribute('data-bs-currentMatch');
+                const currentTeam = button.getAttribute('data-bs-currentTeam');
+                const modalTitle = scoutEditCurrent.querySelector('.modal-title');
+                const modalBodyInputUID = scoutEditCurrent.querySelector('.modal-body input#currentFormUID');
+                const modalBodyInputCurrentMatch = scoutEditCurrent.querySelector('.modal-body input#currentMatch');
+                const modalBodyInputCurrentTeam = scoutEditCurrent.querySelector('.modal-body input#currentTeam');
+                modalTitle.textContent = `Edit current for ${name}`;
+                modalBodyInputUID.value = uid;
+                modalBodyInputCurrentMatch.value = currentMatch;
+                modalBodyInputCurrentTeam.value = currentTeam;
+              })
+            }
+            
+            function saveDefaults() {
+                $.ajax({
+                    url: apiEndpoint + "admin_update_defaults.php",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        uid: $("#defaultFormUID").val(),
+                        default_alliance: $("#defaultAlliance").val(),
+                        default_position: $("#defaultPosition").val()
+                    }),
+                    success: function(response, status){
+                        if (JSON.parse(response).response_code == 200) {
+                            // scoutEditDefaults.hide();
+                        } else {
+                            alert(response + "\nStatus: " + status);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert(error + "\nStatus: " + status);
+                    }
+                });
+            }
+            
+            function saveCurrent() {
+                $.ajax({
+                    url: apiEndpoint + "admin_update_current.php",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        uid: $("#currentFormUID").val(),
+                        current_match: $("#currentMatch").val(),
+                        current_team: $("#currentTeam").val()
+                    }),
+                    success: function(response, status){
+                        if (JSON.parse(response).response_code == 200) {
+                            // scoutEditDefaults.hide();
+                        } else {
+                            alert(response + "\nStatus: " + status);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert(error + "\nStatus: " + status);
+                    }
+                });
+            }
+            
+            function fetchMatchData() {
+                $.ajax({
+                    url: apiEndpoint + 'admin_fetch_matches.php',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        var tableBody = $('#matchesTable tbody');
+                        tableBody.empty(); // Clear existing data
+                        var superTableBody = $('#superMatchesTable tbody');
+                        superTableBody.empty(); // Clear existing data
+            
+                        if (data.error) {
+                            // Handle error
+                            console.error(data.error);
+                        } else {
+                            data.forEach(function(row) {
+                                var html = '<tr>' +
+                                    '<td>' + row.match_num + '</td>' +
+                                    '<td id="' + row.match_num + '-' + row.r1 + '" class="team-cell" style="color: ' + ((row.r1_uid != null) ? "green" : ((matchesBeingScouted.indexOf((row.match_num + '-' + row.r1).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.r1 + '</td>' +
+                                    '<td id="' + row.match_num + '-' + row.r2 + '" class="team-cell" style="color: ' + ((row.r2_uid != null) ? "green" : ((matchesBeingScouted.indexOf((row.match_num + '-' + row.r2).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.r2 + '</td>' +
+                                    '<td id="' + row.match_num + '-' + row.r3 + '" class="team-cell" style="color: ' + ((row.r3_uid != null) ? "green" : ((matchesBeingScouted.indexOf((row.match_num + '-' + row.r3).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.r3 + '</td>' +
+                                    '<td id="' + row.match_num + '-' + row.b1 + '" class="team-cell" style="color: ' + ((row.r4_uid != null) ? "green" : ((matchesBeingScouted.indexOf((row.match_num + '-' + row.b1).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.b1 + '</td>' +
+                                    '<td id="' + row.match_num + '-' + row.b2 + '" class="team-cell" style="color: ' + ((row.r5_uid != null) ? "green" : ((matchesBeingScouted.indexOf((row.match_num + '-' + row.b2).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.b2 + '</td>' +
+                                    '<td id="' + row.match_num + '-' + row.b3 + '" class="team-cell" style="color: ' + ((row.r6_uid != null) ? "green" : ((matchesBeingScouted.indexOf((row.match_num + '-' + row.b3).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.b3 + '</td>' +
+                                    '</tr>';
+                                tableBody.append(html);
+                                html = '<tr>' +
+                                    '<td>' + row.match_num + '</td>' +
+                                    '<td id="ss-' + row.match_num + '-' + row.r1 + '" class="team-cell" style="color: ' + ((row.r1_ss_uid != null) ? "green" : ((matchesBeingScouted.indexOf(('ss-' + row.match_num + '-' + row.r1).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.r1 + '</td>' +
+                                    '<td id="ss-' + row.match_num + '-' + row.r2 + '" class="team-cell" style="color: ' + ((row.r2_ss_uid != null) ? "green" : ((matchesBeingScouted.indexOf(('ss-' + row.match_num + '-' + row.r2).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.r2 + '</td>' +
+                                    '<td id="ss-' + row.match_num + '-' + row.r3 + '" class="team-cell" style="color: ' + ((row.r3_ss_uid != null) ? "green" : ((matchesBeingScouted.indexOf(('ss-' + row.match_num + '-' + row.r3).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.r3 + '</td>' +
+                                    '<td id="ss-' + row.match_num + '-' + row.b1 + '" class="team-cell" style="color: ' + ((row.r4_ss_uid != null) ? "green" : ((matchesBeingScouted.indexOf(('ss-' + row.match_num + '-' + row.b1).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.b1 + '</td>' +
+                                    '<td id="ss-' + row.match_num + '-' + row.b2 + '" class="team-cell" style="color: ' + ((row.r5_ss_uid != null) ? "green" : ((matchesBeingScouted.indexOf(('ss-' + row.match_num + '-' + row.b2).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.b2 + '</td>' +
+                                    '<td id="ss-' + row.match_num + '-' + row.b3 + '" class="team-cell" style="color: ' + ((row.r6_ss_uid != null) ? "green" : ((matchesBeingScouted.indexOf(('ss-' + row.match_num + '-' + row.b3).toString()) > -1) ? "#ffcc00" : "red")) + ';">' + row.b3 + '</td>' +
+                                    '</tr>';
+                                superTableBody.append(html);
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+            
+            fetchAndUpdateScouts();
+			fetchMatchData();
+		</script>
+		
+		<script src="./assets/js/bootstrap.bundle.min.js"></script>
+	</body>
+</html>

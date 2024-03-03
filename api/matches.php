@@ -1,27 +1,31 @@
 <?php
 
-/**
- * TO-DO:
- * Change matches for a comp.
- */
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-echo json_encode([
-    [88,6153,2084,811,238,2423],
-    [3117,811,2423,3467,238,166],
-    [4761,9101,88,5459,78,8567],
-    [5422,4909,316,58,157,1768],
-    [501,2713,1153,9443,1058,5687],
-    [4041,2342,78,131,166,5459],
-    [509,6153,4761,2423,316,157],
-    [2713,88,9443,811,2084,58],
-    [1768,8567,1058,5687,3117,2370],
-    [5813,131,9101,1153,3467,5422],
-    [238,501,2084,4909,4761,4041],
-    [157,5687,2342,78,9443,3117],
-    [316,5459,811,1058,5422,5813],
-    [2370,2423,4909,88,1153,131],
-    [8567,58,3467,6153,4041,501],
-    [166,509,2713,9101,1768,238]
-]);
+include 'conn.php';
+
+if (isset($_GET['input1_match']) && isset($_GET['input1_team'])) {
+    $input1_match = $_GET['input1_match'];
+    $input1_team = $_GET['input1_team'];
+
+    // Prepare the SQL statement to prevent SQL injection
+    $stmt = $conn->prepare("SELECT r1, r2, r3, b1, b2, b3 FROM matches WHERE match_num = ?");
+    $stmt->bind_param("s", $input1_match);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $suggestions = [];
+    
+    while ($row = $result->fetch_assoc()) {
+        foreach (['r1', 'r2', 'r3', 'b1', 'b2', 'b3'] as $column) {
+            if (stripos($row[$column], $input1_team) !== false) { // Case-insensitive search
+                $suggestions[] = $row[$column];
+            }
+        }
+    }
+    
+    echo json_encode(array_unique($suggestions)); // Return unique suggestions
+}
 
 ?>

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Image Overlay Toggle</title>
+    <title>Super Scout Auto Path Toggle</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
     <script type="text/javascript" src="./assets/js/jquery.min.js"></script>
-    <link href="./assets/js/css/bootstrap.min.css">
-    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+    <meta http-equiv="expires" content="Sun, 31 Dec 2018 1:00:00 GMT" />
     <style>
         body {
-            padding: 10px;
+            font-family: sans-serif;
+            background: transparent;
+            padding: 0;
+            margin: 1px;
         }
         
         #fieldContainer {
@@ -47,9 +49,8 @@
         }
     </style>
 </head>
+
 <body>
-    <h2>Super Scouts</h2>
-    
     <!-- Auto Field Input -->
     <div id="fieldContainer">
         <canvas id="imageCanvas"></canvas>
@@ -63,12 +64,6 @@
         <label class="btn btn-secondary" for="startFieldRed">Reverse View</label>
         <span id="viewWillChange">&#10141;&ensp;View will change when page is refreshed.</span>
     </div>
-    
-    <hr>
-    
-    <input id="text" type="text" value="http://jindo.dev.naver.com/collie" style="width:80%" /><br />
-    
-    <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
 
     <script type="text/javascript">
     
@@ -124,39 +119,7 @@
             $("#imageCanvas").removeClass("flip");
             fieldFlipped = false;
         }
-    
-    
-    /* QR CODE JS */
-    
-        var qrcode = new QRCode(document.getElementById("qrcode"), {
-        	width : 100,
-        	height : 100
-        });
         
-        function makeCode () {		
-        	var elText = document.getElementById("text");
-        	
-        	if (!elText.value) {
-        		alert("Input a text");
-        		elText.focus();
-        		return;
-        	}
-        	
-        	qrcode.makeCode(elText.value);
-        }
-        
-        makeCode();
-        
-        $("#text").
-        	on("blur", function () {
-        		makeCode();
-        	}).
-        	on("keydown", function (e) {
-        		if (e.keyCode == 13) {
-        			makeCode();
-        		}
-        	});
-
 
     /**
      * FIELD INPUT JS
@@ -166,27 +129,30 @@
      */
         const canvas = document.getElementById('imageCanvas');
         const ctx = canvas.getContext('2d');
-        const overlaySources = ['./assets/A1.png', 
-                                './assets/A2.png',
-                                './assets/A3.png',
-                                './assets/B1.png',
-                                './assets/B2.png',
-                                './assets/B3.png',
-                                './assets/B4.png',
-                                './assets/B5.png',
-                                './assets/C1.png',
-                                './assets/C2.png',
-                                './assets/C3.png',
-                                './assets/bArrow.png',
-                                './assets/rArrow.png'];
+        const overlaySources = ['./assets/field/A1.png', 
+                                './assets/field/A2.png',
+                                './assets/field/A3.png',
+                                './assets/field/B1.png',
+                                './assets/field/B2.png',
+                                './assets/field/B3.png',
+                                './assets/field/B4.png',
+                                './assets/field/B5.png',
+                                './assets/field/C1.png',
+                                './assets/field/C2.png',
+                                './assets/field/C3.png',
+                                './assets/field/bArrow.png',
+                                './assets/field/rArrow.png'];
         const overlays = [];
         const buffer = 20;
         let baseImageLoaded = false;
         let scaleFactor = 1;
+        let dataParams = [];
+        let dataParamsFromURL = [];
+        let dataIndexToRm;
     
         // Load base image
         const baseImage = new Image();
-        baseImage.src = './assets/field2024.jpg';
+        baseImage.src = './assets/field/field2024.jpg';
         baseImage.onload = () => {
             canvas.width = baseImage.naturalWidth;
             canvas.height = baseImage.naturalHeight;
@@ -211,13 +177,15 @@
         async function loadOverlays() {
             for (const src of overlaySources) {
                 const greenOverlay = await loadImage(src);
-                const redSrc = './assets/-' + src.split('/').pop();
+                const redSrc = './assets/field/-' + src.split('/').pop();
                 const redOverlay = await loadImage(redSrc);
+                
+                let state = (dataParamsFromURL.indexOf(src) > -1) ? 'green' : ((dataParamsFromURL.indexOf(redSrc) > -1) ? 'red' : 'disabled');
         
                 overlays.push({
                     green: greenOverlay,
                     red: redOverlay,
-                    state: 'disabled',
+                    state: state,
                     nonTransparentAreas: analyzeImage(greenOverlay) // Call analyzeImage after the image is loaded
                 });
             }
@@ -315,6 +283,7 @@
             if (!baseImageLoaded) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(baseImage, 0, 0);
+            dataParams = [];
         
             overlays.forEach(overlay => {
                 let imageToDraw;
@@ -323,12 +292,18 @@
                 switch(overlay.state) {
                     case 'green':
                         imageToDraw = overlay.green;
+                        dataParams.push(overlay.green.attributes.src.value);
                         break;
                     case 'red':
                         imageToDraw = overlay.red;
+                        dataParams.push(overlay.red.attributes.src.value);
+                        dataIndexToRm = dataParams.indexOf(overlay.green.attributes.src.value);
+                        if (dataIndexToRm > -1) dataParams.splice(dataIndexToRm, 1);
                         break;
                     default: // 'disabled'
                         imageToDraw = overlay.green; // Use green as default for disabled state
+                        dataIndexToRm = dataParams.indexOf(overlay.red.attributes.src.value);
+                        if (dataIndexToRm > -1) dataParams.splice(dataIndexToRm, 1);
                         applyGrayscale = true;
                 }
         
@@ -338,7 +313,42 @@
                 ctx.globalCompositeOperation = 'source-over'; // Reset filter for next drawing
                 ctx.globalAlpha = 1.0; // Reset alpha
             });
+            
+            updateDataParams();
         }
+        
+        function updateDataParams() {
+            const filenames = dataParams.map(path => {
+                const segments = path.split('/'); // Split the path into segments
+                const filename = segments.pop(); // Get the last segment (filename with extension)
+                return filename.replace('.png', ''); // Remove the .png extension
+            });
+            
+            let dataParamStr = filenames.map((name, index) => `p${index + 1}=${name}`).join('&');
+      
+            if (dataParamStr) {
+                dataParamStr = '?' + dataParamStr;
+            }
+            
+            history.pushState({}, '', 'https://team1676.com/scout/selector.html' + dataParamStr);
+        }
+        
+        function reconstructDataParams() {
+            const queryParams = new URLSearchParams(window.location.search);
+            const dataParams = [];
+        
+            const basePath = './assets/field/';
+            const fileExtension = '.png';
+        
+            queryParams.forEach((value, key) => {
+                const filePath = `${basePath}${value}${fileExtension}`;
+                dataParams.push(filePath);
+            });
+        
+            dataParamsFromURL = dataParams;
+        }
+        
+        reconstructDataParams();
     </script>
 </body>
 </html>

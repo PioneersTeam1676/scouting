@@ -37,10 +37,13 @@ const input2_peg_miss = document.querySelector("#input2-peg-miss"); // input che
 const input2_cooper_yes = document.querySelector("#input2-cooper-yes"); // input check
 const input2_cooper_no = document.querySelector("#input2-cooper-no"); // input check
 
-const input4_amplified_scored = document.querySelector("#input4-amplified_scored");
-const input4_amplified_missed = document.querySelector("#input4-amplified_missed");
+const input3_auto_path_selector = document.querySelector("#input3-auto-path-selector");
+
+const input4_amplified_scored = document.querySelector("#input4-amplified-scored");
+const input4_amplified_missed = document.querySelector("#input4-amplified-missed");
 const input4_offense_defense_notes = document.querySelector("#input4-offense-defense-notes");
 const input4_amp_strat_notes = document.querySelector("#input4-amp-strat-notes");
+const input4_climb_notes = document.querySelector("#input4-climb-notes");
 
 const input0_next = document.querySelector("#input0-login");
 const input1_next = document.querySelector("#input1-start");
@@ -77,7 +80,7 @@ const positionSelect = document.querySelector('ion-select#position-select');
 const autoSyncDatetime = document.querySelector('span#auto-sync-datetime');
 
 input0_UID.addEventListener("input", () => {
-    if (input0_UID.value % 3 == 0 && input0_UID.value % 5 == 0) {
+    if (input0_UID.value >= 1000) {
         input0_super_scout.disabled = false;
     } else {
         input0_super_scout.disabled = true;
@@ -113,26 +116,43 @@ input0_next.addEventListener("click", () => {
 input1_next.addEventListener("click", () => {
     const valid = validateFormInput(1);
     if (valid.valid) {
-        if (retrieveData("session-user-super")) {
-            setPage(3, pageCount);
-        } else {
-            setPage(2, pageCount);
-        }
+        checkTeamInMatch(input1_match.value, input1_team.value).then(result => {
+            if (result) {
+                if (retrieveData("session-user-super")) {
+                    setPage(3, pageCount);
+                } else {
+                    setPage(2, pageCount);
+                }
+            } else {
+                alert("Team " + input1_team.value + " is not in match " + input1_match.value + ".");
+            }
+        })
+        .catch(error => console.error("Error checking team in match:", error));
     } else {
         alert(valid.reason);
     }
 });
+
+async function checkTeamInMatch(matchNum, teamNum) {
+    try {
+        const response = await fetch(`${apiEndpoint}verify_match_team.php?match_num=${matchNum}&team_num=${teamNum}`);
+        return await response.json();
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return false;
+    }
+}
 
 input2_next.addEventListener("click", () => {
     const valid = validateFormInput(2);
     if (valid.valid) {
         let score_data = {
             uid: retrieveData("session-user").uid,
-            comp_num: 0,
+            comp_num: 2,
             match_num: input1_match.value,
             team_num: input1_team.value,
             alliance: (input1_team_blue.checked ? 1 : 2),
-            position: (input1_closest ? 3 : (input1_middle ? 2 : (input1_furthest ? 1 : 0))),
+            position: (input1_closest.checked ? 3 : (input1_middle.checked ? 2 : (input1_furthest.checked ? 1 : 0))),
             mobility: (input2_robot_left_start.checked ? 1 : 2),
             auto_amp_scored: input2_speaker_scored_auto.value,
             auto_amp_missed: input2_speaker_missed_auto.value,
@@ -144,7 +164,7 @@ input2_next.addEventListener("click", () => {
             tele_spkr_missed: input2_amp_missed_tele.value,
             trap_scored: input2_trap_scored.value,
             trap_missed: input2_trap_missed.value,
-            climb: (input2_park_buddy ? 5 : (input2_park_chain ? 4 : (input2_park_solo ? 3 : (input2_park_ignored ? 2 : (input2_park_fell ? 1 : 0))))),
+            climb: (input2_park_buddy.checked ? 5 : (input2_park_chain.checked ? 4 : (input2_park_solo.checked ? 3 : (input2_park_ignored.checked ? 2 : (input2_park_fellcl ? 1 : 0))))),
             grnd_pickup: 0,
             src_pickup: 0,
             subwfr_shots: 0,
@@ -154,34 +174,26 @@ input2_next.addEventListener("click", () => {
             harmony: (input2_peg_score.checked ? 1 : 2)
         };
         
-        try {
-            pushToServer(score_data);
-        } catch {
-            console.log("offline - can't insert data to server");
-        }
+        $.ajax({
+            url: apiEndpoint + "insert.php",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(score_data),
+            success: function(response, status){
+                if (JSON.parse(response).response_code == 201) {
+                    matchSubmitted(JSON.parse(response).insert_id, score_data); // trigger archive of form values in session.js
+                } else {
+                    alert(response + "\nStatus: " + status);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert(error + "\nStatus: " + status);
+            }
+        });
     } else {
         alert(valid.reason);
     }
 });
-
-function pushToServer(score_data) {
-    $.ajax({
-        url: apiEndpoint + "insert.php",
-        type: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(score_data),
-        success: function(response, status){
-            if (JSON.parse(response).response_code == 201) {
-                matchSubmitted(JSON.parse(response).insert_id, score_data); // trigger archive of form values in session.js
-            } else {
-                alert(response + "\nStatus: " + status);
-            }
-        },
-        error: function(xhr, status, error) {
-            alert(error + "\nStatus: " + status);
-        }
-    });
-}
 
 input3_next.addEventListener("click", () => {
     const valid = validateFormInput(3);
@@ -195,24 +207,77 @@ input3_next.addEventListener("click", () => {
 input4_next.addEventListener("click", () => {
     let score_data = {
         uid: retrieveData("session-user").uid,
-        comp_num: 0,
+        comp_num: 2,
         match_num: input1_match.value,
         team_num: input1_team.value,
         alliance: (input1_team_blue.checked ? 1 : 2),
-        position: (input1_closest ? 3 : (input1_middle ? 2 : (input1_furthest ? 1 : 0))),
+        position: (input1_closest.checked ? 3 : (input1_middle.checked ? 2 : (input1_furthest ? 1 : 0))),
         
-        auto_path: 0,
+        auto_path: (input3_auto_path_selector.contentWindow.location.href).split("?")[1],
         amplified_scored: input4_amplified_scored.value,
         amplified_missed: input4_amplified_missed.value,
         offense_rate: $('input[name="range-offense-rating"]:checked').val(),
         defense_rate: $('input[name="range-defense-rating"]:checked').val(),
-        offense_defense_notes: inpu42_speaker_scored_tele.value,
+        offense_defense_notes: input4_offense_defense_notes.value,
         score_focus: $('input[name="score-pref"]:checked').val(),
         drive_team_rate: $('input[name="range-player-rating"]:checked').val(),
         amp_strat_rate: $('input[name="range-ampstrat-rating"]:checked').val(),
-        amp_strat_notes: input4_trap_scored.value
+        amp_strat_notes: input4_amp_strat_notes.value,
+        
+        climb_attempts: 0,
+        trap_attempts: 0,
+        human_frisbee: 0,
+        climb_rate: $('input[name="climb-rating"]:checked').val(),
+        climb_notes: input4_climb_notes.value,
+        robot_broke: $('input[name="broken-select"]:checked').val()
     };
+    
+    $.ajax({
+        url: apiEndpoint + "insert_ss.php",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(score_data),
+        success: function(response, status){
+            console.log(response);
+            if (JSON.parse(response).response_code == 201) {
+                matchSubmitted(JSON.parse(response).insert_id, score_data); // trigger archive of form values in session.js
+                console.log("SUCCESS!!!", response);
+            } else {
+                alert(response + "\nStatus: " + status);
+            }
+        },
+        error: function(xhr, status, error) {
+            alert(error + "\nStatus: " + status);
+        }
+    });
 });
+
+document.getElementById('input1-team').addEventListener('input', function() {
+    const input1_match = document.getElementById('input1-match').value;
+    const input1_team = this.value;
+
+    if (input1_match && input1_team) {
+        fetch(`${apiEndpoint}matches.php?input1_match=${input1_match}&input1_team=${input1_team}`)
+            .then(response => response.json())
+            .then(data => {
+                const suggestionsContainer = document.getElementById('suggestions');
+                suggestionsContainer.innerHTML = '';
+                console.log(data);
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.textContent = item;
+                    div.style.cursor = 'pointer';
+                    div.addEventListener('click', function() {
+                        document.getElementById('input1-team').value = this.textContent;
+                        suggestionsContainer.innerHTML = '';
+                    });
+                    // suggestionsContainer.appendChild(div);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
+
 
 function isNumber(str) {
     return !isNaN(str) && !isNaN(parseFloat(str));
@@ -239,7 +304,7 @@ function validateFormInput(pageIdx) {
         const matchValid = isNumber(input1_match.value);
         if (!matchValid) return { valid: false, reason: "Match value is not a number" };
         const teamValid = isNumber(input1_team.value);
-        if (!teamValid) return { valid: false, reason: "Match team is not a number" };
+        if (!teamValid) return { valid: false, reason: "Please enter a valid team number" };
 
         // make sure they aren't zero or less
         const matchBound = parseFloat(input1_match.value) >= 0;
@@ -325,7 +390,7 @@ function validateFormInput(pageIdx) {
             auto_amp_missed: ampMissedAuto,
             trap_scored: trapScored,
             trap_missed: trapMissed,
-            climb: parkFell ? 1 : parkIgnored ? 2 : parkSolo ? 3 : parkChain ? 4 : parkBuddy ? 5 : 0
+            climb: (parkFell ? 1 : (parkIgnored ? 2 : (parkSolo ? 3 : (parkChain ? 4 : (parkBuddy ? 5 : 0)))))
         } };
 
     } else if (pageIdx == 3) {
@@ -361,12 +426,14 @@ function setPage(num, pageCount) {
     } else {
         view.classList.add("page-invisible");
         view.classList.remove("page-visible");
+
     }
 
     window.scrollTo(0, 0);
 }
 
 function submit() {
+
     if (input0_super_scout.checked) {
         alert("I didn't do superscouting yet oopsie...");
     } else {
@@ -375,19 +442,21 @@ function submit() {
         const form2 = validateFormInput(2);
     
         if (!form0.valid) {
-            alert(form0.reason + " - " + form0.data);
+            alert(form0.reason);
             return;
         } else if (!form1.valid) {
-            alert(form1.reason + " - " + form1.data);
+            alert(form1.reason);
             return;
         } else if (!form2.valid) {
-            alert(form2.reason + " - " + form2.data);
+            alert(form2.reason);
             return;
         }
     
         let payload = { ...form0.data, ...form1.data, ...form2.data };
         console.log(`PAYLOAD: ${payload}`);
     }
+    
+
 }
 
 document.body.addEventListener("keydown", (e) => {
@@ -401,6 +470,7 @@ document.body.addEventListener("keydown", (e) => {
     else if (c == "4") setPage(3, pageCount);
     else if (c == "5") setPage(4, pageCount);
 });
+
 
 /* ONLINE DETECTOR */
 let onlineIndicator = document.getElementById("online-indicator");

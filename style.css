@@ -357,6 +357,14 @@ span.blink {
   position: relative;
 }
 
+#suggestions {
+    padding: 0 8px 0 17px;
+    font-size: 14px;
+    line-height: 2;
+    color: lightblue;
+    text-decoration: underline;
+}
+
 @keyframes blink {
   100% { 
     transform: scale(2, 2); 
