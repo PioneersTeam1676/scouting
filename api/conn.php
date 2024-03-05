@@ -21,4 +21,4 @@ if ($conn->connect_error) {
 5 = Houston
 */
 
-$COMP_NUM = 2;
+$COMP_NUM = 3;

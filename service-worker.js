@@ -1,4 +1,4 @@
-const version = 'v1.1.39';
+const version = 'v1.1.40';
 const filesToCache = [
         "/scout/index.html",
         "/scout/offline.html",
