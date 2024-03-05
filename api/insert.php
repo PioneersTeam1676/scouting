@@ -48,11 +48,17 @@ if(isset($data)) {
 
     // Execute the statement
     if ($stmt->execute()) {
-        http_response_code(201);
-        echo json_encode([
-            "response_code" => 201,
-            "insert_id" => $conn->insert_id
-        ]);
+        $insert_id = $conn->insert_id;
+        if (updateMatchesTable($conn, $data['uid'], $data['comp_num'], $data['match_num'], $data['team_num'])) {
+            http_response_code(201);
+            echo json_encode([
+                "response_code" => 201,
+                "insert_id" => $insert_id
+            ]);
+        } else {
+            http_response_code(500);
+            echo "Server Error: Couldn't update matches table.";
+        }
     } else {
         http_response_code(500);
         echo "Server Error: " . $stmt->error;
@@ -63,6 +69,37 @@ if(isset($data)) {
 } else {
     http_response_code(400);
     echo "Server Error: No data received.";
+}
+
+function updateMatchesTable($conn, $uid, $comp_num, $match_num, $team_num) {
+    $columns = ['r1', 'r2', 'r3', 'b1', 'b2', 'b3'];
+
+    foreach ($columns as $column) {
+        // Dynamic column for UID update, assuming a naming convention of column_uid (e.g., r1_uid)
+        $uid_column = $column . '_uid';
+    
+        // Prepare the SELECT statement to check if the team_num exists in the current column
+        $selectQuery = $conn->prepare("SELECT $column FROM matches WHERE match_num = ? AND $column = ?");
+        $selectQuery->bind_param("ii", $match_num, $team_num);
+    
+        // Execute the SELECT query
+        $selectQuery->execute();
+        $result = $selectQuery->get_result();
+    
+        // If the team_num is found in the current column, update the corresponding UID column
+        if ($result && $result->num_rows > 0) {
+            // Prepare the UPDATE statement to update the UID column
+            $updateQuery = $conn->prepare("UPDATE matches SET $uid_column = ? WHERE match_num = ?");
+            $updateQuery->bind_param("ii", $uid, $match_num);
+    
+            // Execute the UPDATE query
+            if ($updateQuery->execute()) {
+                return true;
+            } else {
+                echo "Error updating record for $column: " . $conn->error . "\n";
+            }
+        }
+    }
 }
 
 // Close connection
