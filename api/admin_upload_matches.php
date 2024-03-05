@@ -23,7 +23,7 @@ if (isset($_POST["submit"])) {
 
         // Read file line by line and insert into database
         while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sql = "INSERT INTO matches (comp_num, match_num, r1, r2, r3, b1, b2, b3) VALUES (1, '" . $column[0] . "', '" . $column[1] . "', '" . $column[2] . "', '" . $column[3] . "', '" . $column[4] . "', '" . $column[5] . "', '" . $column[6] . "')";
+            $sql = "INSERT INTO matches (comp_num, match_num, r1, r2, r3, b1, b2, b3) VALUES ($COMP_NUM, '" . $column[0] . "', '" . $column[1] . "', '" . $column[2] . "', '" . $column[3] . "', '" . $column[4] . "', '" . $column[5] . "', '" . $column[6] . "')";
 
             if (!$conn->query($sql)) {
                 echo "Error: " . $sql . "<br>" . $conn->error;

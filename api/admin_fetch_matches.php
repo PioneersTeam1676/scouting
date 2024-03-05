@@ -4,7 +4,7 @@ include 'conn.php';
 
 header('Content-Type: application/json');
 
-$query = "SELECT * FROM matches WHERE comp_num = 1 ORDER BY match_num ASC";
+$query = "SELECT * FROM matches WHERE comp_num = $COMP_NUM ORDER BY match_num ASC";
     
 $results = $conn->query($query);
 

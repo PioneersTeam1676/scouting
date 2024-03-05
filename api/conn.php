@@ -11,3 +11,14 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
+
+/*
+0 = NULL
+1 = Training
+2 = Mt Olive
+3 = Montgomery
+4 = Lehigh
+5 = Houston
+*/
+
+$COMP_NUM = 2;

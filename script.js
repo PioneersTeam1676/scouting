@@ -148,7 +148,7 @@ input2_next.addEventListener("click", () => {
     if (valid.valid) {
         let score_data = {
             uid: retrieveData("session-user").uid,
-            comp_num: 2,
+            comp_num: retrieveData("session-user-globals").competition,
             match_num: input1_match.value,
             team_num: input1_team.value,
             alliance: (input1_team_blue.checked ? 1 : 2),
@@ -207,7 +207,7 @@ input3_next.addEventListener("click", () => {
 input4_next.addEventListener("click", () => {
     let score_data = {
         uid: retrieveData("session-user").uid,
-        comp_num: 2,
+        comp_num: retrieveData("session-user-globals").competition,
         match_num: input1_match.value,
         team_num: input1_team.value,
         alliance: (input1_team_blue.checked ? 1 : 2),
