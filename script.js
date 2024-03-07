@@ -135,8 +135,9 @@ input1_next.addEventListener("click", () => {
 
 async function checkTeamInMatch(matchNum, teamNum) {
     try {
-        const response = await fetch(`${apiEndpoint}verify_match_team.php?match_num=${matchNum}&team_num=${teamNum}`);
-        return await response.json();
+        // const response = await fetch(`${apiEndpoint}verify_match_team.php?match_num=${matchNum}&team_num=${teamNum}`);
+        // return await response.json();
+        return true;
     } catch (error) {
         console.error('Fetch error:', error);
         return false;
