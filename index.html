@@ -351,7 +351,7 @@
 
                 <div class="input-group input-group-sm mb-3">
                   <span class="input-group-text" id="inputGroup-sizing-sm">
-                    <help-btn msg="The current match you are viewing. If you are watching the first game, you would put in '1'."></help-btn>
+                    <help-btn msg="The current match you are viewing. The current match number is displayed on the big board. For example, if the board says match 10/65, you should input '10'."></help-btn>
                     Match #
                   </span>
                   <input id="input1-match" inputmode="numeric" pattern="\d*" class="form-control"
@@ -360,7 +360,7 @@
 
                 <div class="input-group input-group-sm mb-3">
                   <span class="input-group-text" id="inputGroup-sizing-sm">
-                    <help-btn msg="The specific team you are viewing, out of the three. Every piece of data you give after this must only be about this team."></help-btn>
+                    <help-btn msg="The team number of the team you are spectating. If you are spectating, for example, 1676, you would type in '1676'. You can figure this out by looking at the information provided automatically in the alliance and location fields."></help-btn>
                     Team #
                   </span>
                   <input id="input1-team" inputmode="numeric" pattern="\d*" class="form-control"
@@ -369,7 +369,7 @@
                 </div>
 
                 <label class="form-label" for="position-radio" style="margin-bottom: 0;">
-                  <help-btn msg="The color of your robot, either blue or red."></help-btn>
+                  <help-btn msg="The color of your robot, either blue or red. This is autofilled for you."></help-btn>
                   Alliance <span style="font-size: 10px">(Select One)</span>
                 </label>
 
@@ -382,7 +382,7 @@
                 </div>
 
                 <label class="form-label" for="position-radio" style="margin-bottom: 0; margin-top: 20px;">
-                  <help-btn msg="Relative to you, this is where the robot is. No-show = they didn't arrive. Close = closest to you, Far = farthest from you, Middle = middle."></help-btn>
+                  <help-btn msg="Relative to you, this is where the robot is. No-show = they didn't arrive. Close = closest to you, Far = farthest from you, Middle = middle. This is also autofilled."></help-btn>
                   Bot Position <span style="font-size: 10px">(Select One)</span>
                 </label>
 
@@ -411,13 +411,6 @@
               </div>
 
               <div class="page page-invisible page-2">
-                <div style="display: flex; width: 100%; justify-content: center;">
-                  <button data-bs-toggle="modal" data-bs-target="#staticBackdrop2"
-                    class="btn btn-spaced btn-danger btn-large page-btn-1">Robot Damaged</button>
-                </div>
-              </div>
-
-              <div class="page page-invisible page-2">
 
                 <h1>Autonomous Stage <help-btn msg="The first phase, which lasts 30 seconds."></help-btn></h1>
                 <hr>
@@ -426,21 +419,21 @@
                     <input class="form-check-input" type="checkbox" role="switch" id="input2-robot-left-start">
                     <label class="form-check-label" for="flexSwitchCheckChecked">
                       Robot Left Start
-                      <help-btn msg="Whether or not during the auto phase, the robot even moved out of the starting zone. If they didn't, deselect this."></help-btn>
+                      <help-btn msg="Whether or not during the auto phase, the robot even moved out of the starting zone (past the white line). If they didn't, deselect this."></help-btn>
                     </label>
                   </div>
                 </div>
 
                 <div class="scoring-container">
                   <label class="form-label" for="position-radio">
-                    Subwoofer / Speaker Scoring
+                    Subwoofer / Speaker Scoring <help-btn msg="Scoring for the speaker, which is the big thing in the midlde, which is elevated."></help-btn>
                   </label>
 
                   <div class="scoremiss-group-container">
                     <img src="./assets/img/examples/speaker.png" class="example"></img>
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
-                        <span class="input-group-text">Scored</span>
+                        <span class="input-group-text">Scored <help-btn msg="The number of SUCCESSFUL attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>
@@ -455,7 +448,7 @@
                         </span>
                       </div>
                       <div class="input-group m-1">
-                        <span class="input-group-text">Missed</span>
+                        <span class="input-group-text">Missed <help-btn msg="The number of FAILED attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>
@@ -482,7 +475,7 @@
                     <img src="./assets/img/examples/amp.png" class="example"></img>
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
-                        <span class="input-group-text">Scored</span>
+                        <span class="input-group-text">Scored <help-btn msg="The number of SUCCESSFUL attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>
@@ -497,7 +490,7 @@
                         </span>
                       </div>
                       <div class="input-group m-1">
-                        <span class="input-group-text">Missed</span>
+                        <span class="input-group-text">Missed <help-btn msg="The number of FAILED attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>
@@ -572,7 +565,7 @@
                     <img src="./assets/img/examples/amp.png" class="example"></img>
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
-                        <span class="input-group-text">Scored</span>
+                        <span class="input-group-text">Scored <help-btn msg="The number of SUCCESSFUL attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>
@@ -587,7 +580,7 @@
                         </span>
                       </div>
                       <div class="input-group m-1">
-                        <span class="input-group-text">Missed</span>
+                        <span class="input-group-text">Missed <help-btn msg="The number of FAILED attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>
@@ -620,7 +613,7 @@
                     <img src="./assets/img/examples/trap.png" class="example"></img>
                     <div class="scoremiss-input-container">
                       <div class="input-group m-1">
-                        <span class="input-group-text">Scored</span>
+                        <span class="input-group-text">Scored <help-btn msg="The number of SUCCESSFUL attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>
@@ -635,7 +628,7 @@
                         </span>
                       </div>
                       <div class="input-group m-1">
-                        <span class="input-group-text">Missed</span>
+                        <span class="input-group-text">Missed <help-btn msg="The number of FAILED attempts to score here."></help-btn></span>
                         <span class="input-group-btn">
                           <button type="button" class="quantity-left-minus btn btn-danger btn-number" style="padding-top: 14px;" data-type="minus" data-field="">
                             <ion-icon name="remove-outline"></ion-icon>

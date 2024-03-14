@@ -56,8 +56,11 @@ if(isset($data)) {
                 "insert_id" => $insert_id
             ]);
         } else {
-            http_response_code(500);
-            echo "Server Error: Couldn't update matches table.";
+            http_response_code(201);
+            echo json_encode([
+                "response_code" => 201,
+                "insert_id" => $insert_id
+            ]);
         }
     } else {
         http_response_code(500);

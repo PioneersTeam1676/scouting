@@ -165,7 +165,7 @@ input2_next.addEventListener("click", () => {
             tele_spkr_missed: input2_amp_missed_tele.value,
             trap_scored: input2_trap_scored.value,
             trap_missed: input2_trap_missed.value,
-            climb: (input2_park_buddy.checked ? 5 : (input2_park_chain.checked ? 4 : (input2_park_solo.checked ? 3 : (input2_park_ignored.checked ? 2 : (input2_park_fellcl ? 1 : 0))))),
+            climb: (input2_park_buddy.checked ? 5 : (input2_park_chain.checked ? 4 : (input2_park_solo.checked ? 3 : (input2_park_ignored.checked ? 2 : (input2_park_fell.checked ? 1 : 0))))),
             grnd_pickup: 0,
             src_pickup: 0,
             subwfr_shots: 0,
